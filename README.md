@@ -24,22 +24,22 @@ The platform can be used also for tenants of a building to book the laundry or a
 
 ### Example Platforms
 
-(FlowScape)[https://flowscapesolutions.com/solutions/desk-management]
+[FlowScape](https://flowscapesolutions.com/solutions/desk-management)
 
-(Condeco)[https://www.condecosoftware.com/products/desk-booking/]
+[Condeco](https://www.condecosoftware.com/products/desk-booking/)
 
-(Joan)[https://getjoan.com/desk-booking-solution/]
+[Joan](https://getjoan.com/desk-booking-solution/)
 
-(NSpace)[https://getnspace.com/desk-booking/]
+[NSpace](https://getnspace.com/desk-booking/)
 
-(Robin)[https://robinpowered.com/products/desks]
+[Robin](https://robinpowered.com/products/desks)
 
-(Skedda)[https://www.skedda.com/home/desk-booking-system]
+[Skedda](https://www.skedda.com/home/desk-booking-system)
 
-(SpaceIQ)[https://spaceiq.com/products/employee-experience/hoteling/]
+[SpaceIQ](https://spaceiq.com/products/employee-experience/hoteling/)
 
-(Tribeloo)[https://tribeloo.com/solutions]
+[Tribeloo](https://tribeloo.com/solutions)
 
-(Fischer)[https://fischerkerrn.com/products/desk-booking/]
+[Fischer](https://fischerkerrn.com/products/desk-booking/)
 
-(Envoy)[https://envoy.com/products/hot-desk-booking-software/]
+[Envoy](https://envoy.com/products/hot-desk-booking-software/)
