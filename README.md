@@ -21,3 +21,25 @@ The administrator/project manager is able to see his team when each one of them 
 The platform is meant for employees of a company that are seeking to book their office time and the office/station that they are going to use during that day at the office.
 The platform can be used also for tenants of a building to book the laundry or anything else that can be booked. 
 
+
+### Example Platforms
+
+(FlowScape)[https://flowscapesolutions.com/solutions/desk-management]
+
+(Condeco)[https://www.condecosoftware.com/products/desk-booking/]
+
+(Joan)[https://getjoan.com/desk-booking-solution/]
+
+(NSpace)[https://getnspace.com/desk-booking/]
+
+(Robin)[https://robinpowered.com/products/desks]
+
+(Skedda)[https://www.skedda.com/home/desk-booking-system]
+
+(SpaceIQ)[https://spaceiq.com/products/employee-experience/hoteling/]
+
+(Tribeloo)[https://tribeloo.com/solutions]
+
+(Fischer)[https://fischerkerrn.com/products/desk-booking/]
+
+(Envoy)[https://envoy.com/products/hot-desk-booking-software/]
