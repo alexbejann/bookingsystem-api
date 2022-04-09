@@ -26,6 +26,18 @@ class HomePage extends StatelessWidget {
 class CounterView extends StatelessWidget {
   const CounterView({Key? key}) : super(key: key);
 
+  void newWorkspace() {
+    //todo add a new workspace redirect to creation screen
+  }
+
+  void renameWorkspace() {
+    //todo rename workspace redirect to renaming screen
+  }
+
+  void deleteWorkspace() {
+    //todo delete workspace with a popup for confirmation
+  }
+
   Future<void> _settingModalBottomSheet(BuildContext context) async {
     await showModalBottomSheet<dynamic>(
       context: context,
@@ -34,15 +46,15 @@ class CounterView extends StatelessWidget {
           children: <Widget>[
             ListTile(
               title: const Text('Add area'),
-              onTap: () {},
+              onTap: newWorkspace,
             ),
             ListTile(
               title: const Text('Rename area'),
-              onTap: () {},
+              onTap: renameWorkspace,
             ),
             ListTile(
               title: const Text('Delete area'),
-              onTap: () {},
+              onTap: deleteWorkspace,
             ),
           ],
         );
@@ -59,7 +71,7 @@ class CounterView extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).bottomAppBarColor,
-          onPressed: () {},
+          onPressed: newWorkspace,
           child: const Icon(
             Icons.add,
           ),
