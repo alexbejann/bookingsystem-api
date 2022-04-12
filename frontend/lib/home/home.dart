@@ -5,5 +5,5 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-export 'bloc/work_space_bloc.dart';
+export 'bloc/workspace_bloc.dart';
 export 'view/home_page.dart';

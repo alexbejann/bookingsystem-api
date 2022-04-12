@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/home/bloc/work_space_bloc.dart';
+import 'package:frontend/app/model/workspace.dart';
+import 'package:frontend/home/bloc/workspace_bloc.dart';
 import 'package:frontend/l10n/l10n.dart';
+import 'package:frontend/new_edit_office/view/new_edit_office_page.dart';
 import 'package:frontend/timeslots/timeslots.dart';
+import 'package:grouped_list/grouped_list.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -10,7 +13,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => WorkSpaceBloc(),
+      create: (_) => WorkspaceBloc(),
       child: const CounterView(),
     );
   }
@@ -23,12 +26,34 @@ class CounterView extends StatelessWidget {
     //todo add a new workspace redirect to creation screen
   }
 
-  void renameWorkspace() {
-    //todo rename workspace redirect to renaming screen
-  }
-
   void deleteWorkspace() {
     //todo delete workspace with a popup for confirmation
+  }
+
+  Future<void> _optionMenu(BuildContext context) async {
+    await showModalBottomSheet<dynamic>(
+      context: context,
+      builder: (BuildContext bc) {
+        return Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.star),
+              title: const Text('My bookings'),
+              onTap: () {
+                //todo go to my bookings
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.message),
+              title: const Text('Chat Admin'),
+              onTap: () {
+                //todo go to admin chat with socket io
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _settingModalBottomSheet(BuildContext context) async {
@@ -38,14 +63,33 @@ class CounterView extends StatelessWidget {
         return Wrap(
           children: <Widget>[
             ListTile(
+              leading: const Icon(Icons.add),
               title: const Text('Add area'),
-              onTap: newWorkspace,
+              onTap: () {
+                Navigator.push<MaterialPageRoute>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NewEditOfficePage(
+                      isNewOffice: true,
+                    ),
+                  ),
+                );
+              },
             ),
             ListTile(
+              leading: const Icon(Icons.edit),
               title: const Text('Rename area'),
-              onTap: renameWorkspace,
+              onTap: () {
+                Navigator.push<MaterialPageRoute>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NewEditOfficePage(),
+                  ),
+                );
+              },
             ),
             ListTile(
+              leading: const Icon(Icons.delete_forever),
               title: const Text('Delete area'),
               onTap: deleteWorkspace,
             ),
@@ -81,6 +125,12 @@ class CounterView extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.menu),
                   onPressed: () async {
+                    await _optionMenu(context);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.more_vert),
+                  onPressed: () async {
                     await _settingModalBottomSheet(context);
                   },
                 ),
@@ -89,51 +139,55 @@ class CounterView extends StatelessWidget {
           ),
         ),
         appBar: AppBar(
-          title: const Text('Tabs Demo'),
-          bottom: TabBar(
-            onTap: (value) {
-              print(value);
-            },
-            tabs: [
-              Tab(
-                text: 'Floor 1',
-              ),
-              Tab(
-                text: 'Floor 2',
-              ),
-            ],
-          ),
+          title: const Text('Desk Booking'),
         ),
-        body: const TabBarView(
-          children: [
-            WorkArea(),
-            Icon(Icons.directions_transit),
-          ],
+        body: BlocConsumer<WorkspaceBloc, WorkspaceState>(
+          listener: (context, state) {
+            if (state is WorkspaceError) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.error)));
+            }
+          },
+          builder: (context, state) {
+            if (state is WorkspaceLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is WorkspaceLoaded) {
+              return GroupedListView<Workspace, String>(
+                elements: state.workspaces,
+                groupBy: (element) => element.office.name,
+                groupSeparatorBuilder: (value) => Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  child: Text(value),
+                ),
+                useStickyGroupSeparators: true, // optional
+                itemBuilder: (context, element) {
+                  return Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.work),
+                      title: Text(element.name),
+                      onTap: () {
+                        Navigator.push<MaterialPageRoute>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TimeSlotsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
       ),
-    );
-  }
-}
-
-class WorkArea extends StatelessWidget {
-  const WorkArea({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      separatorBuilder: (context, index) => const Divider(height: 1),
-      shrinkWrap: true,
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text('Workspace $index'),
-          onTap: () {
-            Navigator.push<MaterialPageRoute>(
-              context,
-              MaterialPageRoute(builder: (context) => const TimeSlotsPage()),
-            );
-          },
-        );
-      },
     );
   }
 }

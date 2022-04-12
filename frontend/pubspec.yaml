@@ -15,6 +15,11 @@ dependencies:
     sdk: flutter
   graphql: ^5.0.1
   intl: ^0.17.0
+  fluro: ^2.0.3
+  grouped_list: ^4.2.0
+  flutter_slidable: ^1.2.0
+  equatable: ^2.0.3
+  socket_io: ^1.0.1
 
 dev_dependencies:
   bloc_test: ^9.0.3
