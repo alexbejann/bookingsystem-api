@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/app/model/workspace.dart';
+import 'package:frontend/bookings/bookings.dart';
+import 'package:frontend/chat_admin/chat_admin.dart';
 import 'package:frontend/home/bloc/workspace_bloc.dart';
 import 'package:frontend/l10n/l10n.dart';
 import 'package:frontend/new_edit_office/new_edit_office.dart';
+import 'package:frontend/new_workspace/new_workspace.dart';
 import 'package:frontend/timeslots/timeslots.dart';
 import 'package:grouped_list/grouped_list.dart';
 
@@ -22,8 +25,13 @@ class HomePage extends StatelessWidget {
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
 
-  void newWorkspace() {
-    //todo add a new workspace redirect to creation screen
+  void pushPage(BuildContext context, Widget nextPage) {
+    Navigator.push<MaterialPageRoute>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => nextPage,
+      ),
+    );
   }
 
   void deleteWorkspace() {
@@ -41,6 +49,7 @@ class HomeView extends StatelessWidget {
               title: const Text('My bookings'),
               onTap: () {
                 //todo go to my bookings
+                pushPage(context, const MyBookingsPage());
               },
             ),
             ListTile(
@@ -48,6 +57,7 @@ class HomeView extends StatelessWidget {
               title: const Text('Chat Admin'),
               onTap: () {
                 //todo go to admin chat with socket io
+                pushPage(context, const ChatAdmin());
               },
             ),
           ],
@@ -65,28 +75,17 @@ class HomeView extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.add),
               title: const Text('Add office'),
-              onTap: () {
-                Navigator.push<MaterialPageRoute>(
+              onTap: () => pushPage(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const NewEditOfficePage(
-                      isNewOffice: true,
-                    ),
+                  const NewEditOfficePage(
+                    isNewOffice: true,
                   ),
-                );
-              },
+                ),
             ),
             ListTile(
               leading: const Icon(Icons.edit),
               title: const Text('Rename office'),
-              onTap: () {
-                Navigator.push<MaterialPageRoute>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NewEditOfficePage(),
-                  ),
-                );
-              },
+              onTap: () => pushPage(context, const NewEditOfficePage()),
             ),
             ListTile(
               leading: const Icon(Icons.delete_forever),
@@ -102,91 +101,83 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).bottomAppBarColor,
-          onPressed: newWorkspace,
-          child: const Icon(
-            Icons.add,
-          ),
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).bottomAppBarColor,
+        onPressed: () => pushPage(context, const NewWorkspacePage()),
+        child: const Icon(
+          Icons.add,
         ),
-        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-        bottomNavigationBar: BottomAppBar(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          shape: const CircularNotchedRectangle(),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () async {
-                    await _optionMenu(context);
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () async {
-                    await _settingModalBottomSheet(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        appBar: AppBar(
-          title: const Text('Desk Booking'),
-        ),
-        body: BlocConsumer<WorkspaceBloc, WorkspaceState>(
-          listener: (context, state) {
-            if (state is WorkspaceError) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.error)));
-            }
-          },
-          builder: (context, state) {
-            if (state is WorkspaceLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is WorkspaceLoaded) {
-              return GroupedListView<Workspace, String>(
-                elements: state.workspaces,
-                groupBy: (element) => element.office.name,
-                groupSeparatorBuilder: (value) => Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  child: Text(value),
-                ),
-                useStickyGroupSeparators: true, // optional
-                itemBuilder: (context, element) {
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.work),
-                      title: Text(element.name),
-                      onTap: () {
-                        Navigator.push<MaterialPageRoute>(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TimeslotsPage(),
-                          ),
-                        );
-                      },
-                    ),
-                  );
+      ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      bottomNavigationBar: BottomAppBar(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: const CircularNotchedRectangle(),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () async {
+                  await _optionMenu(context);
                 },
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
+              ),
+              IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: () async {
+                  await _settingModalBottomSheet(context);
+                },
+              ),
+            ],
+          ),
         ),
+      ),
+      appBar: AppBar(
+        title: const Text('Desk Booking'),
+      ),
+      body: BlocConsumer<WorkspaceBloc, WorkspaceState>(
+        listener: (context, state) {
+          if (state is WorkspaceError) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.error)));
+          }
+        },
+        builder: (context, state) {
+          if (state is WorkspaceLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is WorkspaceLoaded) {
+            return GroupedListView<Workspace, String>(
+              elements: state.workspaces,
+              groupBy: (element) => element.office.name,
+              groupSeparatorBuilder: (value) => Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                child: Text(value),
+              ),
+              useStickyGroupSeparators: true, // optional
+              itemBuilder: (context, element) {
+                return Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.work),
+                    title: Text(element.name),
+                    onTap: () {
+                      pushPage(context, const TimeslotsPage());
+                    },
+                  ),
+                );
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }
