@@ -7,8 +7,7 @@ const userSchema = new Schema({
     username: {type: String, unique: true},
     password: {type: String, required: true},
     admin: {type: Boolean, default: false},
-    /// TODO add organization for multi tenant
-    ///organization: {type: String}
+    organizationID: {type: mongoose.Types.ObjectId, ref: 'Organization', required: true},
 });
 
 export default mongoose.model('User', userSchema);
