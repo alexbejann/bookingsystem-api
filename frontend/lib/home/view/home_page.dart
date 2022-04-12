@@ -14,13 +14,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => WorkspaceBloc(),
-      child: const CounterView(),
+      child: const HomeView(),
     );
   }
 }
 
-class CounterView extends StatelessWidget {
-  const CounterView({Key? key}) : super(key: key);
+class HomeView extends StatelessWidget {
+  const HomeView({Key? key}) : super(key: key);
 
   void newWorkspace() {
     //todo add a new workspace redirect to creation screen
