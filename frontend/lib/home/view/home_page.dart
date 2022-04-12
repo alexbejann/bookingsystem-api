@@ -1,13 +1,6 @@
-// Copyright (c) 2022, Very Good Ventures
-// https://verygood.ventures
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/home/cubit/counter_cubit.dart';
+import 'package:frontend/home/bloc/work_space_bloc.dart';
 import 'package:frontend/l10n/l10n.dart';
 import 'package:frontend/timeslots/timeslots.dart';
 
@@ -17,7 +10,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CounterCubit(),
+      create: (_) => WorkSpaceBloc(),
       child: const CounterView(),
     );
   }
