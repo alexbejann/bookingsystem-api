@@ -64,7 +64,7 @@ class CounterView extends StatelessWidget {
           children: <Widget>[
             ListTile(
               leading: const Icon(Icons.add),
-              title: const Text('Add area'),
+              title: const Text('Add office'),
               onTap: () {
                 Navigator.push<MaterialPageRoute>(
                   context,
@@ -78,7 +78,7 @@ class CounterView extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.edit),
-              title: const Text('Rename area'),
+              title: const Text('Rename office'),
               onTap: () {
                 Navigator.push<MaterialPageRoute>(
                   context,
@@ -90,7 +90,7 @@ class CounterView extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.delete_forever),
-              title: const Text('Delete area'),
+              title: const Text('Delete office'),
               onTap: deleteWorkspace,
             ),
           ],
