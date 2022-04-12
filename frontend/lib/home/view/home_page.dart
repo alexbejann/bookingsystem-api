@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/app/model/workspace.dart';
 import 'package:frontend/home/bloc/workspace_bloc.dart';
 import 'package:frontend/l10n/l10n.dart';
-import 'package:frontend/new_edit_office/view/new_edit_office_page.dart';
+import 'package:frontend/new_edit_office/new_edit_office.dart';
 import 'package:frontend/timeslots/timeslots.dart';
 import 'package:grouped_list/grouped_list.dart';
 
