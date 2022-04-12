@@ -9,16 +9,16 @@ import 'package:frontend/timeslots/view/widgets/timeslot_date.dart';
 /// If the timeslot is available the popup would have to ask the user if
 /// he is sure that he wants to book the tapped time
 /// The system would support only one hour of booking
-class TimeSlotsPage extends StatefulWidget {
-  const TimeSlotsPage({Key? key}) : super(key: key);
+class TimeslotsPage extends StatefulWidget {
+  const TimeslotsPage({Key? key}) : super(key: key);
 
   static const String routeName = '/timeslots';
 
   @override
-  State<TimeSlotsPage> createState() => _TimeSlotsPageState();
+  State<TimeslotsPage> createState() => _TimeslotsPageState();
 }
 
-class _TimeSlotsPageState extends State<TimeSlotsPage> {
+class _TimeslotsPageState extends State<TimeslotsPage> {
   Future<bool?> _showMyDialog(BuildContext context) async {
     return showDialog<bool>(
       context: context,

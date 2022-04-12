@@ -172,7 +172,7 @@ class HomeView extends StatelessWidget {
                         Navigator.push<MaterialPageRoute>(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const TimeSlotsPage(),
+                            builder: (context) => const TimeslotsPage(),
                           ),
                         );
                       },
