@@ -11,7 +11,7 @@ export default gql`
     registerUser(
       username: String!,
       password: String!,
-      full_name: String,
+      admin: Boolean,
     ): User
   }
   
