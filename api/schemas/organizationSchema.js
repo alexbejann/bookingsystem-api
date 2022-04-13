@@ -8,18 +8,11 @@ export default gql`
   }
   
   extend type Mutation {
-    registerUser(
-      username: String!,
-      password: String!,
-      admin: Boolean,
-      organizationID: ID!
-    ): User
+    addOrganization(name: String!): Organization
   }
   
-  type User {
+  type Organization {
     id: ID
-    username: String,
-    admin: Boolean
-    token: String
+    name: String,
   }
 `;

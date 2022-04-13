@@ -1,7 +1,7 @@
 'use strict';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
-import {login} from '../utils/auth';
+import Organization from "../models/organization";
 import {AuthenticationError} from 'apollo-server-express';
 
 export default {
@@ -12,17 +12,27 @@ export default {
             }
             return User.findById(args.id);
         },
-        login: async (parent, args, {req}) => {
-            req.body = args;
-            return await login(req);
+        login: async (parent, {username, password}, context) => {
+            const {user} = await context.authenticate("graphql-local", {
+                username,
+                password
+            });
+            if (!user) {
+                throw new AuthenticationError('Invalid credentials');
+            }
+
+            return user;
         },
     },
     Mutation: {
         registerUser: async (parent, args) => {
             try {
+                console.log(parent, args);
+                const foundOrg = await Organization.findById(args.organization);
                 const hash = await bcrypt.hash(args.password, 10);
                 const userWithHash = {
                     ...args,
+                    organization: foundOrg,
                     password: hash,
                 };
                 const newUser = new User(userWithHash);
