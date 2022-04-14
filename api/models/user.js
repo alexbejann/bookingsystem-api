@@ -1,6 +1,6 @@
 'use strict';
 import mongoose from 'mongoose';
-import organization from "./organization";
+import organization from './organization';
 
 const Schema = mongoose.Schema;
 
