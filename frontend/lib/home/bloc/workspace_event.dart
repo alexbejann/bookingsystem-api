@@ -17,7 +17,7 @@ class GetWorkspace extends WorkspaceEvent {
 }
 
 class RenameWorkspace extends WorkspaceEvent {
-  const RenameWorkspace(this.newWorkspaceName);
+  const RenameWorkspace(this.newWorkspaceName, );
 
   final String newWorkspaceName;
 }
@@ -31,5 +31,5 @@ class WorkspaceEdited extends WorkspaceEvent {
 class DeleteWorkspace extends WorkspaceEvent {
   const DeleteWorkspace(this.workspace);
 
-  final String workspace;
+  final Workspace workspace;
 }

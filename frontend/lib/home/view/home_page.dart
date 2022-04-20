@@ -7,7 +7,7 @@ import 'package:frontend/chat_admin/chat_admin.dart';
 import 'package:frontend/home/bloc/workspace_bloc.dart';
 import 'package:frontend/l10n/l10n.dart';
 import 'package:frontend/new_edit_office/new_edit_office.dart';
-import 'package:frontend/new_workspace/new_workspace.dart';
+import 'package:frontend/new_edit_workspace/new_edit_workspace.dart';
 import 'package:frontend/timeslots/timeslots.dart';
 import 'package:grouped_list/grouped_list.dart';
 
@@ -77,11 +77,11 @@ class HomeView extends StatelessWidget {
               leading: const Icon(Icons.add),
               title: const Text('Add office'),
               onTap: () => pushPage(
-                  context,
-                  const NewEditOfficePage(
-                    isNewOffice: true,
-                  ),
+                context,
+                const NewEditOfficePage(
+                  isNewOffice: true,
                 ),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.edit),
@@ -106,7 +106,10 @@ class HomeView extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).bottomAppBarColor,
-        onPressed: () => pushPage(context, const NewWorkspacePage()),
+        onPressed: () => pushPage(
+          context,
+          NewEditWorkspaceView(),
+        ),
         child: const Icon(
           Icons.add,
         ),
@@ -168,8 +171,10 @@ class HomeView extends StatelessWidget {
                       motion: const ScrollMotion(),
                       children: [
                         SlidableAction(
-                          onPressed: (BuildContext context){
-
+                          onPressed: (BuildContext context) {
+                            context
+                                .read<WorkspaceBloc>()
+                                .add(DeleteWorkspace(element));
                           },
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
@@ -177,9 +182,12 @@ class HomeView extends StatelessWidget {
                           label: 'Delete',
                         ),
                         SlidableAction(
-                          onPressed: (BuildContext context){
-
-                          },
+                          onPressed: (BuildContext context) => pushPage(
+                            context,
+                            NewEditWorkspaceView(
+                              editWorkspace: element,
+                            ),
+                          ),
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
                           icon: Icons.edit,
