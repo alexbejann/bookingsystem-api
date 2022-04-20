@@ -14,5 +14,5 @@ const linkSchema = gql`
 export default [
     linkSchema,
     userSchema,
-    organizationSchema
+    organizationSchema,
 ];
