@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/timeslots/view/widgets/status.dart';
-import 'package:frontend/timeslots/view/widgets/timeslot_date.dart';
+import 'package:frontend/add_timeslot/add_timeslot.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 /// This page should contain all the timeslots from 9 to 17.00
 /// onTap on a timeslot should display either if the user wants to reserve
@@ -50,39 +50,115 @@ class _TimeslotsPageState extends State<TimeslotsPage> {
     );
   }
 
+  Future<void> addBooking(CalendarTapDetails calendarTapDetails) async {
+    if (calendarTapDetails.appointments == null) {
+      ///todo navigate to add timeslot page
+      ///todo with the initial datetime from calendar tap details
+      await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Row(
+            children: const [
+              Icon(Icons.warning),
+              Text('Would you like to book?'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            ElevatedButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                Navigator.push<MaterialPageRoute>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddTimeSlotPage(
+                      calendarTapDetails: calendarTapDetails,
+                    ),
+                  ),
+                ).then((value) {
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+          ],
+        ),
+      );
+      return;
+    } else if (calendarTapDetails.appointments!.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('There is already a reservation!')),
+      );
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('TimeSlots'),
-            TimeSlotDate(initialDate: DateTime.now())
-          ],
-        ),
+        title: const Text('TimeSlots'),
       ),
-      body: ListView.separated(
-        separatorBuilder: (context, index) => const Divider(height: 1),
-        shrinkWrap: true,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('8:00'),
-            subtitle: const Status(
-              isReserved: false,
-            ),
-
-            /// Disable onTap when the timeslot is reserved
-            onTap: () async {
-              /// Show confirmation dialog to book the spot
-              final result = await _showMyDialog(context);
-              print('Go to timeslots $index');
-            },
-          );
-        },
+      body: SfCalendar(
+        onTap: addBooking,
+        view: CalendarView.workWeek,
+        firstDayOfWeek: 1,
+        dataSource: _getCalendarDataSource(),
+        timeSlotViewSettings: const TimeSlotViewSettings(
+          timeIntervalHeight: 100,
+          startHour: 9,
+          endHour: 17,
+        ),
       ),
     );
   }
+}
+
+BookingDataSource _getCalendarDataSource() {
+  List<Booking> meetings = <Booking>[];
+  meetings.add(Booking(
+      bookingTitle: 'Workspace',
+      from: DateTime(2022, 4, 21, 10),
+      to: DateTime(2022, 4, 21, 12)));
+
+  return BookingDataSource(meetings);
+}
+
+class BookingDataSource extends CalendarDataSource {
+  BookingDataSource(List<Booking> source) {
+    appointments = source;
+  }
+
+  Booking getBooking(int index) => appointments![index] as Booking;
+
+  @override
+  DateTime getStartTime(int index) {
+    return getBooking(index).from;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return getBooking(index).to;
+  }
+
+  @override
+  String getSubject(int index) {
+    return getBooking(index).bookingTitle;
+  }
+}
+
+class Booking {
+  Booking({
+    this.bookingTitle = '',
+    required this.from,
+    required this.to,
+    this.background = Colors.red,
+  });
+
+  String bookingTitle;
+  DateTime from;
+  DateTime to;
+  Color background;
 }
