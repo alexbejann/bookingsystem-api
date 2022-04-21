@@ -14,7 +14,9 @@ class AddTimeSlotPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => TimeslotBloc(),
-      child: AddTimeslotView(calendarTapDetails: calendarTapDetails,),
+      child: AddTimeslotView(
+        calendarTapDetails: calendarTapDetails,
+      ),
     );
   }
 }
@@ -67,7 +69,7 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
             Expanded(
               child: buildDropdownField(
                 text: Utils.toTime(fromDate),
-                onClicked: () {},
+                onClicked: () => pickFromDateTime(pickDate: false),
               ),
             ),
           ],
@@ -88,7 +90,7 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
             Expanded(
               child: buildDropdownField(
                 text: Utils.toTime(toDate),
-                onClicked: () {},
+                onClicked: () => pickFromDateTime(pickDate: false),
               ),
             ),
           ],
@@ -122,6 +124,22 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
 
   Future pickFromDateTime({required bool pickDate}) async {
     final date = await pickDateTime(fromDate, pickDate: pickDate);
+    if (date == null) {
+      return;
+    }
+
+    /// If is after toDate hour keep it the same so that you won't have shuffled hours
+    if (date.isAfter(toDate)) {
+      toDate = DateTime(
+        fromDate.year,
+        fromDate.month,
+        fromDate.day,
+        date.hour,
+        date.minute,
+      );
+    }
+
+    setState(() => fromDate = date);
   }
 
   Future<DateTime?> pickDateTime(
@@ -135,11 +153,21 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
       final timeOfDay = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(initialDate),
+        // builder: (BuildContext context, Widget? child) {
+        //   return MediaQuery(
+        //       data: MediaQuery.of(context)
+        //           .copyWith(alwaysUse24HourFormat: true),
+        //       child: child!);
+        // }
       );
 
       if (timeOfDay == null) return null;
 
-      final date = DateTime(initialDate.year, initialDate.month);
+      final date =
+          DateTime(initialDate.year, initialDate.month, initialDate.day);
+
+      final time = Duration(hours: timeOfDay.hour, minutes: timeOfDay.minute);
+      return date.add(time);
     }
   }
 
@@ -155,7 +183,9 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
     super.initState();
 
     fromDate = widget.calendarTapDetails.date!;
-    toDate = widget.calendarTapDetails.date!.add(const Duration(hours: 1),);
+    toDate = widget.calendarTapDetails.date!.add(
+      const Duration(hours: 1),
+    );
   }
 
   @override
