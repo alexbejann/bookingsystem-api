@@ -19,36 +19,6 @@ class TimeslotsPage extends StatefulWidget {
 }
 
 class _TimeslotsPageState extends State<TimeslotsPage> {
-  Future<bool?> _showMyDialog(BuildContext context) async {
-    return showDialog<bool>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            children: const [Icon(Icons.warning), Text(' Are you sure?')],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: const <Widget>[
-                Text('Would you like to book this timeslot?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(false),
-            ),
-            TextButton(
-              child: const Text('Confirm'),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   Future<void> addBooking(CalendarTapDetails calendarTapDetails) async {
     if (calendarTapDetails.appointments == null) {
