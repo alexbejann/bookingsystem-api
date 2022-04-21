@@ -1,4 +1,3 @@
-'use strict';
 import {gql} from 'apollo-server-express';
 
 export default gql`
@@ -21,5 +20,6 @@ export default gql`
     username: String,
     admin: Boolean
     token: String
+    organizationID: ID
   }
 `;
