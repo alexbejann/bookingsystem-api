@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/app/model/office.dart';
 import 'package:frontend/app/model/workspace.dart';
 import 'package:frontend/home/home.dart';
-import 'package:frontend/new_edit_office/bloc/office_bloc.dart';
 import 'package:frontend/new_edit_office/new_edit_office.dart';
 class NewEditWorkspacePage extends StatelessWidget {
   const NewEditWorkspacePage({Key? key}) : super(key: key);

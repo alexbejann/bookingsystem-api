@@ -4,7 +4,9 @@ import Organization from "../models/organization";
 
 export default {
     Query: {
-
+        organizations: async (parent, args) => {
+            return Organization.find();
+        },
     },
     Mutation: {
         addOrganization: async (parent, args) => {

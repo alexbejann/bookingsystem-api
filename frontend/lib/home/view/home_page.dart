@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend/app/model/workspace.dart';
 import 'package:frontend/bookings/bookings.dart';
 import 'package:frontend/chat_admin/chat_admin.dart';
 import 'package:frontend/home/bloc/workspace_bloc.dart';
 import 'package:frontend/l10n/l10n.dart';
 import 'package:frontend/new_edit_office/new_edit_office.dart';
-import 'package:frontend/new_workspace/new_workspace.dart';
+import 'package:frontend/new_edit_workspace/new_edit_workspace.dart';
 import 'package:frontend/timeslots/timeslots.dart';
 import 'package:grouped_list/grouped_list.dart';
 
@@ -76,11 +77,11 @@ class HomeView extends StatelessWidget {
               leading: const Icon(Icons.add),
               title: const Text('Add office'),
               onTap: () => pushPage(
-                  context,
-                  const NewEditOfficePage(
-                    isNewOffice: true,
-                  ),
+                context,
+                const NewEditOfficePage(
+                  isNewOffice: true,
                 ),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.edit),
@@ -105,7 +106,10 @@ class HomeView extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).bottomAppBarColor,
-        onPressed: () => pushPage(context, const NewWorkspacePage()),
+        onPressed: () => pushPage(
+          context,
+          NewEditWorkspaceView(),
+        ),
         child: const Icon(
           Icons.add,
         ),
@@ -162,12 +166,42 @@ class HomeView extends StatelessWidget {
               useStickyGroupSeparators: true, // optional
               itemBuilder: (context, element) {
                 return Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.work),
-                    title: Text(element.name),
-                    onTap: () {
-                      pushPage(context, const TimeslotsPage());
-                    },
+                  child: Slidable(
+                    endActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          onPressed: (BuildContext context) {
+                            context
+                                .read<WorkspaceBloc>()
+                                .add(DeleteWorkspace(element));
+                          },
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: 'Delete',
+                        ),
+                        SlidableAction(
+                          onPressed: (BuildContext context) => pushPage(
+                            context,
+                            NewEditWorkspaceView(
+                              editWorkspace: element,
+                            ),
+                          ),
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                          icon: Icons.edit,
+                          label: 'Edit',
+                        ),
+                      ],
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.work),
+                      title: Text(element.name),
+                      onTap: () {
+                        pushPage(context, const TimeslotsPage());
+                      },
+                    ),
                   ),
                 );
               },

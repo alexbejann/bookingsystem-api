@@ -3,5 +3,5 @@ import organizationResolver from "./organizationResolver";
 
 export default [
     userResolver,
-    organizationResolver
+    organizationResolver,
 ];
