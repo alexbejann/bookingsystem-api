@@ -7,13 +7,14 @@ export default gql`
   }
   
   extend type Mutation {
-    addOffice(name: String!): Office
-    renameOffice(name: String!) : Office
+    addOffice(name: String!, organizationID: ID!): Office
+    renameOffice(newName: String!, officeID: ID!) : Office
     deleteOffice(id: ID!) : Office
   }
   
   type Office {
-    id : String
+    id : ID
     name: String
+    organizationID: ID
   }
 `;
