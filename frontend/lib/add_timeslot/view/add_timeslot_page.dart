@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/add_timeslot/add_timeslot.dart';
 import 'package:frontend/timeslots/bloc/timeslot_bloc.dart';
 import 'package:frontend/utils/utils.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -43,7 +44,7 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
             primary: Colors.transparent,
             shadowColor: Colors.transparent,
           ),
-          onPressed: () {},
+          onPressed: saveForm,
           child: const Text('SAVE'),
         ),
       ];
@@ -168,6 +169,13 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
 
       final time = Duration(hours: timeOfDay.hour, minutes: timeOfDay.minute);
       return date.add(time);
+    }
+  }
+  
+  Future saveForm() async {
+    final isValid = _formKey.currentState!.validate();
+    if (isValid) {
+      ///todo call bloc timeslot bloc to add timeslot
     }
   }
 
