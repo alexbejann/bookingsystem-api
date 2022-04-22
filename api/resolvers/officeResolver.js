@@ -21,7 +21,7 @@ export default {
         },
         deleteOffice: async (parent, args) => {
             console.log('deleteOffice', parent, args);
-            return await Office.findOneAndDelete({_id: args.ID});
+            return await Office.findOneAndDelete({_id: args.id});
         }
     },
 };
