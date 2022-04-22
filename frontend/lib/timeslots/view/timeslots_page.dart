@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/add_timeslot/add_timeslot.dart';
+import 'package:frontend/app/model/timeslot.dart';
+import 'package:frontend/timeslots/timeslots.dart';
+import 'package:frontend/timeslots/timeslots.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 /// This page should contain all the timeslots from 9 to 17.00
@@ -19,7 +23,6 @@ class TimeslotsPage extends StatefulWidget {
 }
 
 class _TimeslotsPageState extends State<TimeslotsPage> {
-
   Future<void> addBooking(CalendarTapDetails calendarTapDetails) async {
     if (calendarTapDetails.appointments == null) {
       ///todo navigate to add timeslot page
@@ -71,37 +74,53 @@ class _TimeslotsPageState extends State<TimeslotsPage> {
       appBar: AppBar(
         title: const Text('TimeSlots'),
       ),
-      body: SfCalendar(
-        onTap: addBooking,
-        view: CalendarView.workWeek,
-        firstDayOfWeek: 1,
-        dataSource: _getCalendarDataSource(),
-        timeSlotViewSettings: const TimeSlotViewSettings(
-          timeIntervalHeight: 100,
-          startHour: 9,
-          endHour: 17,
-        ),
+      body: BlocConsumer<TimeslotBloc, TimeslotState>(
+        listener: (context, state) {
+          // TODO: implement listener
+        },
+        builder: (context, state) {
+          if (state is TimeslotLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is TimeslotsLoaded) {
+            return SfCalendar(
+                onTap: addBooking,
+                view: CalendarView.workWeek,
+                firstDayOfWeek: 1,
+                dataSource: BookingDataSource(state.timeSlots),
+                timeSlotViewSettings: const TimeSlotViewSettings(
+                  timeIntervalHeight: 100,
+                  startHour: 9,
+                  endHour: 17,
+                ),);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }
 }
 
-BookingDataSource _getCalendarDataSource() {
-  List<Booking> meetings = <Booking>[];
-  meetings.add(Booking(
-      bookingTitle: 'Workspace',
-      from: DateTime(2022, 4, 21, 10),
-      to: DateTime(2022, 4, 21, 12)));
-
-  return BookingDataSource(meetings);
-}
+// BookingDataSource _getCalendarDataSource() {
+//   List<Booking> meetings = <Booking>[];
+//   meetings.add(Booking(
+//       bookingTitle: 'Workspace',
+//       from: DateTime(2022, 4, 21, 10),
+//       to: DateTime(2022, 4, 21, 12)));
+//
+//   return BookingDataSource(meetings);
+// }
 
 class BookingDataSource extends CalendarDataSource {
-  BookingDataSource(List<Booking> source) {
+  BookingDataSource(List<Timeslot> source) {
     appointments = source;
   }
 
-  Booking getBooking(int index) => appointments![index] as Booking;
+  Timeslot getBooking(int index) => appointments![index] as Timeslot;
 
   @override
   DateTime getStartTime(int index) {
@@ -117,18 +136,4 @@ class BookingDataSource extends CalendarDataSource {
   String getSubject(int index) {
     return getBooking(index).bookingTitle;
   }
-}
-
-class Booking {
-  Booking({
-    this.bookingTitle = '',
-    required this.from,
-    required this.to,
-    this.background = Colors.red,
-  });
-
-  String bookingTitle;
-  DateTime from;
-  DateTime to;
-  Color background;
 }

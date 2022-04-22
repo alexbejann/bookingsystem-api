@@ -14,7 +14,7 @@ class BookingInitial extends BookingState {
 class BookingsLoaded extends BookingState {
 
   const BookingsLoaded(this.bookings);
-  final List<Booking> bookings;
+  final List<Timeslot> bookings;
 }
 
 class BookingsError extends BookingState {
