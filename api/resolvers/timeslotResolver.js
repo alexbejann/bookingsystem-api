@@ -14,7 +14,7 @@ export default {
 
     },
     Mutation: {
-        addTimeslots: async (parent, args) => {
+        addTimeslot: async (parent, args) => {
             console.log('addTimeslots', parent, args);
             const newTimeslot = new Timeslot(args);
             console.log('newTimeslot', newTimeslot);
