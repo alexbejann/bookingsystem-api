@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/add_timeslot/add_timeslot.dart';
@@ -56,17 +57,18 @@ class _TimeslotsViewState extends State<TimeslotsView> {
                 ElevatedButton(
                   child: const Text('Yes'),
                   onPressed: () {
-                    Navigator.push<MaterialPageRoute>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            AddTimeSlotPage(
-                              calendarTapDetails: calendarTapDetails,
-                            ),
-                      ),
-                    ).then((value) {
-                      Navigator.of(context).pop();
-                    });
+                    context.beamToNamed('/addTimeslots', data: calendarTapDetails);
+                    // Navigator.push<MaterialPageRoute>(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) =>
+                    //         AddTimeSlotPage(
+                    //           calendarTapDetails: calendarTapDetails,
+                    //         ),
+                    //   ),
+                    // ).then((value) {
+                    //   Navigator.of(context).pop();
+                    // });
                   },
                 ),
               ],
@@ -79,6 +81,11 @@ class _TimeslotsViewState extends State<TimeslotsView> {
       );
       return;
     }
+  }
+  @override
+  void initState() {
+    super.initState();
+    //context.read<TimeslotBloc>().add(GetTimeslots());
   }
 
   @override

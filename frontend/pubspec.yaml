@@ -23,6 +23,8 @@ dependencies:
   socket_io: ^1.0.1
   syncfusion_flutter_calendar: ^20.1.50
   flutter_login: ^3.2.0
+  shared_preferences: ^2.0.13
+  formz: ^0.4.1
 
 dev_dependencies:
   bloc_test: ^9.0.3
