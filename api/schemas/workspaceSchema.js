@@ -15,6 +15,6 @@ export default gql`
   type Workspace {
     id: ID
     name: String
-    officeID: ID
+    officeID: Office
   }
 `;

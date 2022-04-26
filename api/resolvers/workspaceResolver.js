@@ -1,15 +1,14 @@
 'use strict';
 import Workspace from '../models/workspace';
 import {checkPermission} from "../utils/auth";
-import {ignore} from "nodemon/lib/rules";
 
 export default {
     Query: {
         workspaces: async (parent, args, {user}) => {
             checkPermission(user, false);
             console.log('workspaces', parent, args);
-            return await Workspace.find({officeId: args.officeID});
-        }
+            return await Workspace.find({officeId: args.officeID}).populate('officeID');
+        },
     },
     Mutation: {
         addWorkspace: async (parent, args, {user}) => {
