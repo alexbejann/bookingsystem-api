@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 
 /// username : "alex"
@@ -12,7 +10,7 @@ class User extends Equatable {
     required this.id,
     this.admin = false,
     required this.username,
-    required this.token
+    required this.token,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
