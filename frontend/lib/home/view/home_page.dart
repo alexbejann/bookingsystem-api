@@ -108,7 +108,7 @@ class HomeView extends StatelessWidget {
         backgroundColor: Theme.of(context).bottomAppBarColor,
         onPressed: () => pushPage(
           context,
-          NewEditWorkspaceView(),
+          NewEditWorkspacePage(),
         ),
         child: const Icon(
           Icons.add,

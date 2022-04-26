@@ -2,6 +2,8 @@
 import {gql} from 'apollo-server-express';
 
 export default gql`
+  scalar DateTime
+    
   extend type Query {
     userBookings(userID: ID!): [Timeslot]
     workspaceTimeslots(workspaceID: ID!): [Timeslot]
@@ -10,8 +12,8 @@ export default gql`
   extend type Mutation {
     addTimeslot(
     title: String!
-    from: Date!
-    to: Date!
+    from: DateTime!
+    to: DateTime!
     userID: ID
     workspaceID: ID
     ): Timeslot
@@ -22,8 +24,8 @@ export default gql`
   type Timeslot {
     id: ID
     title: String 
-    from: Date
-    to: Date
+    from: DateTime
+    to: DateTime
     userID: ID
     officeID: ID
   }

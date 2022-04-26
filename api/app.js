@@ -4,10 +4,9 @@ import typeDefs from './schemas/index';
 import resolvers from './resolvers/index';
 import dotenv from 'dotenv';
 import connectMongo from './utils/db';
-import User from './models/user';
-import {buildContext} from 'graphql-passport';
 import pass from './utils/pass';
 import helmet from 'helmet';
+import {checkAuth} from './utils/auth';
 
 dotenv.config();
 
@@ -23,12 +22,17 @@ dotenv.config();
         const server = new ApolloServer({
             typeDefs,
             resolvers,
-            context: ({ req, res }) => buildContext({ req, res, User })
+            context: async ({ req }) => {
+                if (req) {
+                    const user = await checkAuth(req);
+                    return { user, req };
+                }
+            },
+
         });
 
         const app = express();
-        app.use(helmet());
-        app.use(pass.initialize());
+        //app.use(helmet());
         await server.start();
 
         server.applyMiddleware({ app });

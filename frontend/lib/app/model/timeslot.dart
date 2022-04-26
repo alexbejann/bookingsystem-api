@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 class Timeslot {
 
   Timeslot({
-    this.bookingTitle = '',
+    this.title = '',
     required this.from,
     required this.to,
-    this.background = Colors.red,
+    required this.userID,
+    required this.officeID,
   });
 
-  String bookingTitle;
+  String title;
   DateTime from;
   DateTime to;
-  Color background;
+  String userID;
+  String officeID;
 }
