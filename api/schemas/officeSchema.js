@@ -15,6 +15,6 @@ export default gql`
   type Office {
     id : ID
     name: String
-    organizationID: ID
+    organizationID: Organization
   }
 `;

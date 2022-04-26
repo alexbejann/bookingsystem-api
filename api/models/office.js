@@ -10,7 +10,7 @@ const Schema = mongoose.Schema;
  */
 const officeSchema = new Schema({
     name: {type: String, required: true},
-    organizationID: {type: mongoose.Types.ObjectId, ref: organization, required: true}
+    organizationID: {type: mongoose.Types.ObjectId, ref: 'Organization', required: true}
 });
 
 export default mongoose.model('Office', officeSchema);

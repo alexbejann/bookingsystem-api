@@ -7,7 +7,9 @@ export default {
         offices: async (parent, {organizationID}, {user}) => {
             checkPermission(user, false);
             console.log('offices', parent, organizationID);
-            return await Office.find({organizationID: organizationID});
+            const offices = await Office.find({organizationID: organizationID}).populate('organizationID');
+            console.log(offices);
+            return offices;
         }
     },
     Mutation: {
