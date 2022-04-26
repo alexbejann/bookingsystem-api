@@ -9,6 +9,11 @@ export default {
             console.log('workspaces', parent, args);
             return await Workspace.find({officeId: args.officeID}).populate('officeID');
         },
+        workspacesByOrg: async (parent, args, {user}) => {
+            checkPermission(user, false);
+            console.log('workspaces', parent, args);
+            return await Workspace.find().populate('officeID').where({organizationId: args.organizationID});
+        }
     },
     Mutation: {
         addWorkspace: async (parent, args, {user}) => {
