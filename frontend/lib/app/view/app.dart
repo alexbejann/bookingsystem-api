@@ -30,7 +30,7 @@ class App extends StatelessWidget {
     guards: [
       // Guard /logged_in_page by beaming to /login if the user is unauthenticated:
       BeamGuard(
-        pathPatterns: ['/home'],
+        pathPatterns: ['/home/*'],
         check: (context, state) =>
             context.read<AuthenticationBloc>().isAuthenticated(),
         beamToNamed: (_, __) => '/login',
