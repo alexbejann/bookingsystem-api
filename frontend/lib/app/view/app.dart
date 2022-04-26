@@ -90,10 +90,7 @@ class App extends StatelessWidget {
           authenticationRepository: context.read<AuthenticationRepository>(),
         ),
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) {
-            print('here');
-            beamerDelegate.update();
-          },
+          listener: (context, state) => beamerDelegate.update(),
           child: MaterialApp.router(
             routerDelegate: beamerDelegate,
             routeInformationParser: BeamerParser(),

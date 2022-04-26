@@ -15,11 +15,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     required this.authenticationRepository,
   })  : super(const LoginState()) {
     on<LoginUsernameChanged>(
-            (event, emit) => emit(_mapUsernameChangedToState(event, state)));
+            (event, emit) => emit(_mapUsernameChangedToState(event, state)),);
     on<LoginPasswordChanged>(
-            (event, emit) => emit(_mapPasswordChangedToState(event, state)));
+            (event, emit) => emit(_mapPasswordChangedToState(event, state)),);
     on<LoginSubmitted>((event, emit) async =>
-    await _mapLoginSubmittedToState(event, state, emit));
+    await _mapLoginSubmittedToState(event, state, emit),);
   }
 
   final AuthenticationRepository authenticationRepository;
@@ -56,10 +56,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(status: FormzStatus.submissionInProgress));
 
       try {
-        await authenticationRepository.logInWithEmailAndPassword(
-          username: state.username.value,
-          password: state.password.value,
-        );
+        await authenticationRepository.login(variables: <String, dynamic>{
+          'username': state.username.value,
+          'password': state.password.value,
+        },);
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
       } on Exception catch (_) {
         emit(state.copyWith(status: FormzStatus.submissionFailure));

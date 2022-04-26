@@ -79,7 +79,7 @@ class AuthenticationBloc
   Future<User?> _tryGetUser() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      if (!prefs.containsKey('userAccount')) {
+      if (!prefs.containsKey('user')) {
         return null;
       }
       final prefString = prefs.getString('user');
@@ -90,13 +90,4 @@ class AuthenticationBloc
       return null;
     }
   }
-
-  // AuthenticationState fromJson(Map<String, dynamic> json) =>
-  //     AuthenticationState._(
-  //       status: AuthenticationStatus.values[json['status']],
-  //       user: User.fromJson(json['user']),
-  //     );
-
-  // Map<String, dynamic> toJson(AuthenticationState state) =>
-  //     {'status': state.status.index, 'user': state.user.toJson()};
 }
