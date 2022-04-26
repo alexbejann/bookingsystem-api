@@ -26,7 +26,7 @@ export default gql`
     title: String 
     from: DateTime
     to: DateTime
-    userID: ID
-    officeID: ID
+    userID: User
+    officeID: Office
   }
 `;
