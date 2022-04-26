@@ -1,14 +1,14 @@
 'use strict';
 import passport from 'passport';
+import Strategy from 'passport-local';
 import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
-import {GraphQLLocalStrategy} from 'graphql-passport';
 import jwt from 'jsonwebtoken';
 
-passport.use(
-    new GraphQLLocalStrategy(async (username, password, done) => {
-        console.log('GraphQLLocalStrategy', username, password);
+passport.use('local',
+    new Strategy({},async (username, password, done) => {
+        console.log('LocalStrategy', username, password);
         const user = await User.findOne({ username });
         // if user is undefined
         if (!user) {
@@ -30,14 +30,12 @@ passport.use(
     })
 );
 
-passport.use(
-    new JWTStrategy(
+passport.use('jwt', new JWTStrategy(
         {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: 'lzenfinze18bjsz'
         },
         (payload, done) => {
-            console.log('jwt payload', payload);
             done(null, payload);
         }
     )
