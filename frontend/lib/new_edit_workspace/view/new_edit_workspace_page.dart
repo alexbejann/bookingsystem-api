@@ -4,14 +4,21 @@ import 'package:frontend/app/model/office.dart';
 import 'package:frontend/app/model/workspace.dart';
 import 'package:frontend/home/home.dart';
 import 'package:frontend/new_edit_office/new_edit_office.dart';
+import 'package:frontend/new_edit_office/repositories/office_repository.dart';
+
 class NewEditWorkspacePage extends StatelessWidget {
   const NewEditWorkspacePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => OfficeBloc(),
-      child: NewEditWorkspaceView(),
+    return RepositoryProvider(
+      create: (context) => OfficeRepository(),
+      child: BlocProvider(
+        create: (context) => OfficeBloc(
+          officeRepository: context.read<OfficeRepository>(),
+        ),
+        child: NewEditWorkspaceView(),
+      ),
     );
   }
 }
@@ -31,13 +38,11 @@ class NewEditWorkspaceView extends StatefulWidget {
 class _NewEditWorkspaceViewState extends State<NewEditWorkspaceView> {
   late TextEditingController _oldListTitleController;
   String newWorkspaceName = '';
-  
+
   @override
   void initState() {
     super.initState();
-    if (widget.editWorkspace != null) {
-      context.read<OfficeBloc>().add(const GetOffices());
-    }
+    context.read<OfficeBloc>().add(const GetOffices());
   }
 
   @override
@@ -104,7 +109,7 @@ class _NewEditWorkspaceViewState extends State<NewEditWorkspaceView> {
                       items: state.offices.map((Office office) {
                         return DropdownMenuItem<String>(
                           /// todo replace this with office id
-                          value: office.name,
+                          value: office.id,
                           child: Text(office.name),
                         );
                       }).toList(),

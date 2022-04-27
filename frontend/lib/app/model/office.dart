@@ -32,6 +32,16 @@ class Office extends Equatable {
     return map;
   }
 
+  /// return list of Offices from jsonList
+  static List<Office> fromListDynamic(List<dynamic> jsonList) {
+    final list = <Office>[];
+
+    for (final element in jsonList) {
+      list.add(Office.fromJson(element as Map<String, dynamic>));
+    }
+    return list;
+  }
+
   @override
   List<Object?> get props => [name];
 }

@@ -82,6 +82,15 @@ class GraphQLService {
     return result;
   }
 
+  Future<QueryResult> getOffices({
+    required Map<String, dynamic> variables,
+  }) async {
+    final options = MutationOptions(
+      document: gql(queries.officesByOrg), variables: variables,);
+    final result = await _client.mutate(options);
+    return result;
+  }
+
   // Future<QueryResult> getUserById(String id) async {
   //   final options = QueryOptions(
   //     document: gql(queries.getUserById),

@@ -9,3 +9,9 @@ abstract class OfficeEvent {
 class GetOffices extends OfficeEvent {
   const GetOffices();
 }
+
+class AddOffice extends OfficeEvent {
+  const AddOffice({required this.name});
+
+  final String name;
+}
