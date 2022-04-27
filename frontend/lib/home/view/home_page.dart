@@ -215,7 +215,7 @@ class _HomeViewState extends State<HomeView> {
                     child: ListTile(
                       leading: const Icon(Icons.work),
                       title: Text(element.name),
-                      onTap: () => context.beamToNamed('/timeslots'),
+                      onTap: () => context.beamToNamed('/home/timeslots'),
                     ),
                   ),
                 );
