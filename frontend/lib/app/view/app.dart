@@ -28,14 +28,14 @@ class App extends StatelessWidget {
 
   final beamerDelegate = BeamerDelegate(
     guards: [
-      // Guard /logged_in_page by beaming to /login if the user is unauthenticated:
+      // Guard /home/* by beaming to /login if the user is unauthenticated:
       BeamGuard(
         pathPatterns: ['/home/*'],
         check: (context, state) =>
             context.read<AuthenticationBloc>().isAuthenticated(),
         beamToNamed: (_, __) => '/login',
       ),
-      // Guard /login by beaming to /logged_in_page if the user is authenticated:
+      // Guard /login by beaming to /home if the user is authenticated:
       BeamGuard(
         pathPatterns: ['/login'],
         check: (context, state) =>
@@ -46,40 +46,6 @@ class App extends StatelessWidget {
     initialPath: '/login',
     locationBuilder: (routeInformation, _) => BeamerLocations(routeInformation),
   );
-
-  // final beamerDelegate = BeamerDelegate(
-  //   guards: [
-  //     BeamGuard(
-  //       pathPatterns: ['/logged_in_page'],
-  //       check: (context, state) =>
-  //           context.read<AuthenticationBloc>().isAuthenticated(),
-  //       beamToNamed: (_, __) => '/login',
-  //     ),
-  //     // Guard /login by beaming to /logged_in_page if the user is authenticated:
-  //     BeamGuard(
-  //       pathPatterns: ['/login'],
-  //       check: (context, state) =>
-  //           !context.read<AuthenticationBloc>().isAuthenticated(),
-  //       beamToNamed: (_, __) => '/logged_in_page',
-  //     )
-  //   ],
-  //   initialPath: '/login',
-  //   notFoundPage: const BeamPage(child: Text('Route not found')),
-  //   locationBuilder: RoutesLocationBuilder(
-  //     routes: {
-  //       '/home': (context, state, data) => HomePage(),
-  //       '/login': (context, state, data) => LoginPage(),
-  //       '/timeslots': (context, state, data) => TimeslotsPage(),
-  //       '/addTimeslots': (context, state, data) => AddTimeSlotPage(
-  //             calendarTapDetails: data as CalendarTapDetails,
-  //           ),
-  //       '/bookings': (context, state, data) => MyBookingsPage(),
-  //       '/chatAdmin': (context, state, data) => ChatAdmin(),
-  //       '/newEditOffice': (context, state, data) => NewEditOfficePage(),
-  //       '/newEditWorkspace': (context, state, data) => NewEditWorkspacePage(),
-  //     },
-  //   ),
-  // );
 
   @override
   Widget build(BuildContext context) {

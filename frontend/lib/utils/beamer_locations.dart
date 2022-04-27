@@ -16,12 +16,12 @@ class BeamerLocations extends BeamLocation<BeamState> {
   List<String> get pathPatterns => [
     '/login',
     '/home',
-    '/timeslots',
-    '/addTimeslots',
-    '/bookings',
-    '/chatAdmin',
-    '/newEditOffice',
-    '/newEditWorkspace',
+    '/home/timeslots',
+    '/home/addTimeslots',
+    '/home/bookings',
+    '/home/chatAdmin',
+    '/home/newEditOffice',
+    '/home/newEditWorkspace',
   ];
 
   @override
