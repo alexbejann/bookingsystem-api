@@ -26,6 +26,16 @@ class Workspace extends Equatable {
     return map;
   }
 
+  /// return list of Workspaces from jsonList
+  static List<Workspace> fromListDynamic(List<dynamic> jsonList) {
+    final list = <Workspace>[];
+
+    for (final element in jsonList) {
+      list.add(Workspace.fromJson(element as Map<String, dynamic>));
+    }
+    return list;
+  }
+
   @override
   List<Object?> get props => [name];
 }

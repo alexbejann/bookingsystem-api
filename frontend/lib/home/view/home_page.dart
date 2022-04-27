@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -5,6 +6,7 @@ import 'package:frontend/app/model/workspace.dart';
 import 'package:frontend/bookings/bookings.dart';
 import 'package:frontend/chat_admin/chat_admin.dart';
 import 'package:frontend/home/bloc/workspace_bloc.dart';
+import 'package:frontend/home/repositories/workspace_repository.dart';
 import 'package:frontend/l10n/l10n.dart';
 import 'package:frontend/new_edit_office/new_edit_office.dart';
 import 'package:frontend/new_edit_workspace/new_edit_workspace.dart';
@@ -16,16 +18,25 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => WorkspaceBloc(),
-      child: const HomeView(),
+    return RepositoryProvider(
+      create: (context) => WorkspaceRepository(),
+      child: BlocProvider(
+        create: (context) => WorkspaceBloc(
+            workspaceRepository: context.read<WorkspaceRepository>(),),
+        child: const HomeView(),
+      ),
     );
   }
 }
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   void pushPage(BuildContext context, Widget nextPage) {
     Navigator.push<MaterialPageRoute>(
       context,
@@ -97,6 +108,12 @@ class HomeView extends StatelessWidget {
         );
       },
     );
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    context.read<WorkspaceBloc>().add(const GetWorkspaces());
   }
 
   @override
@@ -198,9 +215,7 @@ class HomeView extends StatelessWidget {
                     child: ListTile(
                       leading: const Icon(Icons.work),
                       title: Text(element.name),
-                      onTap: () {
-                        pushPage(context, const TimeslotsPage());
-                      },
+                      onTap: () => context.beamToNamed('/timeslots'),
                     ),
                   ),
                 );

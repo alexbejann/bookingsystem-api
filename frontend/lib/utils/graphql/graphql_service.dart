@@ -1,8 +1,7 @@
-import 'package:frontend/utils/graphql/queries.dart' as queries;
 import 'package:frontend/utils/graphql/mutations.dart' as mutations;
+import 'package:frontend/utils/graphql/queries.dart' as queries;
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class GraphQLService {
   GraphQLService() {
@@ -12,32 +11,36 @@ class GraphQLService {
     Link _link;
 
     final authLink = AuthLink(
-        getToken: () async {
-          final prefs = await SharedPreferences.getInstance();
-          return 'Bearer ${prefs.get('token') ?? ''}';
-        },);
+      getToken: () async {
+        final prefs = await SharedPreferences.getInstance();
+        return 'Bearer ${prefs.get('token') ?? ''}';
+      },
+    );
 
     _link = authLink.concat(httpLink);
     _client = GraphQLClient(
-        link: _link,
-        cache: GraphQLCache(store: InMemoryStore()),
+      link: _link,
+      cache: GraphQLCache(store: InMemoryStore()),
     );
   }
 
   late GraphQLClient _client;
 
-  Future<QueryResult> performQuery(String query,
-      {required Map<String, dynamic> variables,}) async {
-    final options =
-    QueryOptions(document: gql(query), variables: variables);
+  Future<QueryResult> performQuery(
+    String query, {
+    required Map<String, dynamic> variables,
+  }) async {
+    final options = QueryOptions(document: gql(query), variables: variables);
 
     final result = await _client.query(options);
 
     return result;
   }
 
-  Future<QueryResult> performMutation(String query,
-      {required Map<String, dynamic> variables,}) async {
+  Future<QueryResult> performMutation(
+    String query, {
+    required Map<String, dynamic> variables,
+  }) async {
     final options = MutationOptions(document: gql(query), variables: variables);
 
     final result = await _client.mutate(options);
@@ -61,10 +64,20 @@ class GraphQLService {
   //   return result;
   // }
 
-  Future<QueryResult> loginMutation(
-      {required Map<String, dynamic> variables,}) async {
+  Future<QueryResult> loginMutation({
+    required Map<String, dynamic> variables,
+  }) async {
     final options =
-    MutationOptions(document: gql(mutations.login), variables: variables);
+        MutationOptions(document: gql(mutations.login), variables: variables);
+    final result = await _client.mutate(options);
+    return result;
+  }
+
+  Future<QueryResult> getWorkspaces({
+    required Map<String, dynamic> variables,
+  }) async {
+    final options = MutationOptions(
+        document: gql(queries.workspacesByOrg), variables: variables,);
     final result = await _client.mutate(options);
     return result;
   }

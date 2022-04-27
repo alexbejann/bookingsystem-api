@@ -7,36 +7,6 @@ query Organizations {
 }
 ''';
 
-const String getUserById = r'''
-  query User($id: String!) {
-    user(id: $id) {
-      id
-      email
-      name
-      profile {
-        id
-        fileName
-        filePath
-        createdAt
-        updatedAt
-      }
-      settings {
-        id
-        title
-        description
-        data
-      }
-      updatedAt
-    }
-  }
-''';
-
-const String logout = '''
-  query SignOut {
-    signOut()
-  }
-''';
-
 const String workspacesByOfficeId = r'''
 query Workspaces($officeId: ID!) {
   workspaces(officeID: $officeId) {
@@ -56,6 +26,19 @@ const String userBookings = r'''
     to
     userID
     officeID
+  }
+}
+''';
+
+const String workspacesByOrg = r'''
+query Query($organizationId: ID!) {
+  workspacesByOrg(organizationID: $organizationId) {
+    id
+    name
+    officeID {
+      id
+      name
+    }
   }
 }
 ''';
