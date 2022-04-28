@@ -14,8 +14,8 @@ export default gql`
     title: String!
     from: DateTime!
     to: DateTime!
-    userID: ID
-    workspaceID: ID
+    userID: ID!
+    workspaceID: ID!
     ): Timeslot
     
     removeTimeslot(timeslotID: ID!): Timeslot

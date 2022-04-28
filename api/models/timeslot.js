@@ -14,8 +14,8 @@ const Schema = mongoose.Schema;
  */
 const timeslotSchema = new Schema({
     title: {type: String, required: true},
-    from: {type: Date, required: true},
-    to: {type: Date, required: true},
+    from: {type: Date, unique: true, required: true},
+    to: {type: Date, unique: true, required: true},
     userID: {type: mongoose.Types.ObjectId, ref: user},
     workspaceID: {type: mongoose.Types.ObjectId, ref: workspace}
 });
