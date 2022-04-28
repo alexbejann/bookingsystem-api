@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/add_timeslot/add_timeslot.dart';
 import 'package:frontend/timeslots/bloc/timeslot_bloc.dart';
+import 'package:frontend/timeslots/repositories/timeslot_repository.dart';
 import 'package:frontend/utils/utils.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -13,12 +14,9 @@ class AddTimeSlotPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => TimeslotBloc(),
-      child: AddTimeslotView(
+    return AddTimeslotView(
         calendarTapDetails: calendarTapDetails,
-      ),
-    );
+      );
   }
 }
 
@@ -60,13 +58,6 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
         header: 'FROM',
         child: Row(
           children: [
-            // Expanded(
-            //   flex: 2,
-            //   child: buildDropdownField(
-            //     text: Utils.toDate(fromDate),
-            //     onClicked: () => pickFromDateTime(pickDate: true),
-            //   ),
-            // ),
             Expanded(
               child: buildDropdownField(
                 text: Utils.toTime(fromDate),
@@ -81,13 +72,6 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
         header: 'TO',
         child: Row(
           children: [
-            // Expanded(
-            //   flex: 2,
-            //   child: buildDropdownField(
-            //     text: Utils.toDate(toDate),
-            //     onClicked: () {},
-            //   ),
-            // ),
             Expanded(
               child: buildDropdownField(
                 text: Utils.toTime(toDate),
@@ -154,12 +138,6 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
       final timeOfDay = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(initialDate),
-        // builder: (BuildContext context, Widget? child) {
-        //   return MediaQuery(
-        //       data: MediaQuery.of(context)
-        //           .copyWith(alwaysUse24HourFormat: true),
-        //       child: child!);
-        // }
       );
 
       if (timeOfDay == null) return null;
