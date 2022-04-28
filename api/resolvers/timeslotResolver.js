@@ -12,7 +12,7 @@ export default {
         workspaceTimeslots: async (parent, args, {user}) => {
             checkPermission(user, false);
             console.log('workspaceTimeslots', parent, args);
-            return await Timeslot.find({workSpaceID: args.workSpaceID});
+            return await Timeslot.find().populate('workspaceID').where({workspaceID: args.workspaceID});
         },
 
     },

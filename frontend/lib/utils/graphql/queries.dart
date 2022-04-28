@@ -63,13 +63,8 @@ query Query($workspaceId: ID!) {
     title
     to
     from
-    userID {
+    workspaceID {
       id
-      username
-    }
-    officeID {
-      id
-      name
     }
   }
 }
