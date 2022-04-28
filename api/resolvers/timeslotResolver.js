@@ -7,7 +7,7 @@ export default {
         userBookings: async (parent, args, {user}) => {
             checkPermission(user, false);
             console.log('userBookings', parent, args);
-            return await Timeslot.find({userID: args.userID});
+            return await Timeslot.find().populate('userID').where({userID: args.userID});
         },
         workspaceTimeslots: async (parent, args, {user}) => {
             checkPermission(user, false);
