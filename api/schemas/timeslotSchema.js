@@ -27,6 +27,6 @@ export default gql`
     from: DateTime
     to: DateTime
     userID: User
-    officeID: Office
+    workspaceID: Workspace
   }
 `;
