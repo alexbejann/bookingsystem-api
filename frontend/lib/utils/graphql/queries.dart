@@ -56,6 +56,25 @@ query Offices($organizationId: ID!) {
 }
 ''';
 
+const String timeslotsByWorkspaceId = r'''
+query Query($workspaceId: ID!) {
+  workspaceTimeslots(workspaceID: $workspaceId) {
+    id
+    title
+    to
+    from
+    userID {
+      id
+      username
+    }
+    officeID {
+      id
+      name
+    }
+  }
+}
+''';
+
 const String workspaceTimeslots = r'''
 query WorkspaceTimeslots($workspaceId: ID!) {
   workspaceTimeslots(workspaceID: $workspaceId) {

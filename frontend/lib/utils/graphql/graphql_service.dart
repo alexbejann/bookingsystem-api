@@ -50,20 +50,6 @@ class GraphQLService {
     return result;
   }
 
-  // Future<QueryResult> signUpMutation(
-  //     String email, String username, String password) async {
-  //   final MutationOptions _options = MutationOptions(
-  //     document: gql(mutations.signUp),
-  //     variables: <String, String>{
-  //       'email': email,
-  //       'name': username,
-  //       'password': password,
-  //     },
-  //   );
-  //   final result = await _client.mutate(_options);
-  //   return result;
-  // }
-
   Future<QueryResult> loginMutation({
     required Map<String, dynamic> variables,
   }) async {
@@ -91,32 +77,21 @@ class GraphQLService {
     return result;
   }
 
-  // Future<QueryResult> getUserById(String id) async {
-  //   final options = QueryOptions(
-  //     document: gql(queries.getUserById),
-  //     variables: <String, String>{
-  //       'id': id,
-  //     },
-  //   );
-  //   final result = await _client.query(options);
-  //   return result;
-  // }
+  Future<QueryResult> getTimeslots({
+    required Map<String, dynamic> variables,
+  }) async {
+    final options = MutationOptions(
+      document: gql(queries.timeslotsByWorkspaceId), variables: variables,);
+    final result = await _client.mutate(options);
+    return result;
+  }
 
-  // Future<QueryResult> refreshToken() async {
-  //   QueryOptions options = QueryOptions(
-  //     documentNode: gql(queries.refreshToken),
-  //     variables: {},
-  //   );
-  //   final result = await _client.query(options);
-  //   return result;
-  // }
-
-  // Future<QueryResult> logOut() async {
-  //   final options = QueryOptions(
-  //     document: gql(queries.logout),
-  //     variables: const <String, String>{},
-  //   );
-  //   final result = await _client.query(options);
-  //   return result;
-  // }
+  Future<QueryResult> addTimeslotMutation({
+    required Map<String, dynamic> variables,
+  }) async {
+    final options = MutationOptions(
+      document: gql(mutations.addTimeslot), variables: variables,);
+    final result = await _client.mutate(options);
+    return result;
+  }
 }
