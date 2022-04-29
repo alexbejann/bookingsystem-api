@@ -11,8 +11,8 @@ export default gql`
   extend type Mutation {
     addTimeslot(
     title: String!
-    from: DateTime!
-    to: DateTime!
+    from: String!
+    to: String!
     userID: ID!
     workspaceID: ID!
     ): Timeslot
