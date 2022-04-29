@@ -55,7 +55,6 @@ class Timeslot implements Equatable {
     final list = <Timeslot>[];
 
     for (final element in jsonList) {
-      print(element);
       list.add(Timeslot.fromJson(element as Map<String, dynamic>));
     }
     return list;
