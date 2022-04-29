@@ -2,7 +2,6 @@
 import {gql} from 'apollo-server-express';
 
 export default gql`
-  scalar DateTime
     
   extend type Query {
     userBookings(userID: ID!): [Timeslot]
@@ -24,8 +23,8 @@ export default gql`
   type Timeslot {
     id: ID
     title: String 
-    from: DateTime
-    to: DateTime
+    from: String
+    to: String
     userID: User
     workspaceID: Workspace
   }
