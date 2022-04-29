@@ -94,4 +94,13 @@ class GraphQLService {
     final result = await _client.mutate(options);
     return result;
   }
+
+  Future<QueryResult> getBookings({
+    required Map<String, dynamic> variables,
+  }) async {
+    final options = MutationOptions(
+      document: gql(queries.userBookings), variables: variables,);
+    final result = await _client.mutate(options);
+    return result;
+  }
 }

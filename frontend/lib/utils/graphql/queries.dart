@@ -18,14 +18,16 @@ query Workspaces($officeId: ID!) {
 ''';
 
 const String userBookings = r'''
-  query UserBookings($userId: ID!) {
+query Query($userId: ID!) {
   userBookings(userID: $userId) {
     id
     title
     from
     to
-    userID
-    officeID
+    workspaceID {
+      id
+      name
+    }
   }
 }
 ''';

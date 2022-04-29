@@ -38,4 +38,17 @@ class TimeslotRepository {
     final resultTimeslots = result.data!['addTimeslot'] as Map<String, dynamic>;
     return Timeslot.fromJson(resultTimeslots);
   }
+
+  Future<List<Timeslot>> getBookings() async {
+    final user = await User.getUser();
+    QueryResult? result = await graphQLService.getBookings(
+      variables: <String, dynamic> {
+        'userId': user.id,
+      },
+    );
+    assert(result.data != null, 'userBookings null');
+    final resultBookings =
+    result.data!['userBookings'] as List<dynamic>;
+    return Timeslot.fromListDynamic(resultBookings);
+  }
 }
