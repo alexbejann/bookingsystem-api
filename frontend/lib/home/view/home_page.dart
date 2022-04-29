@@ -2,6 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:frontend/app/bloc/authentication_bloc.dart';
 import 'package:frontend/app/model/workspace.dart';
 import 'package:frontend/bookings/bookings.dart';
 import 'package:frontend/chat_admin/chat_admin.dart';
@@ -71,6 +72,11 @@ class _HomeViewState extends State<HomeView> {
                 //todo go to admin chat with socket io
                 pushPage(context, const ChatAdmin());
               },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Log Out'),
+              onTap: context.read<AuthenticationBloc>().logout,
             ),
           ],
         );

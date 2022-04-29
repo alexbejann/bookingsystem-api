@@ -59,6 +59,7 @@ class AuthenticationBloc
   ) async {
     switch (event.status) {
       case AuthenticationStatus.unauthenticated:
+        await _logoutUser();
         return const AuthenticationState.unauthenticated();
       case AuthenticationStatus.authenticated:
         final user = await _tryGetUser();
@@ -86,6 +87,18 @@ class AuthenticationBloc
       final extractedUserData =
           jsonDecode(prefString.toString()) as Map<String, dynamic>;
       return User.fromJson(extractedUserData);
+    } on Exception {
+      return null;
+    }
+  }
+
+  Future<bool?> _logoutUser() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!prefs.containsKey('user')) {
+        return null;
+      }
+      return await prefs.remove('user');
     } on Exception {
       return null;
     }
