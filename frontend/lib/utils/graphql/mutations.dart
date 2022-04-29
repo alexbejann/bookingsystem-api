@@ -40,7 +40,7 @@ mutation Mutation($deleteOfficeId: ID!) {
 ''';
 
 const String addTimeslot = r'''
-mutation Mutation($title: String!, $from: DateTime!, $to: DateTime!, $userId: ID, $workspaceId: ID) {
+mutation Mutation($title: String!, $from: DateTime!, $to: DateTime!, $userId: ID!, $workspaceId: ID!) {
   addTimeslot(title: $title, from: $from, to: $to, userID: $userId, workspaceID: $workspaceId) {
     id
     title
