@@ -17,3 +17,17 @@ class DeleteTimeslot extends TimeslotEvent {
   final String timeslotId;
 }
 
+class LoadCalendarTapDetails extends TimeslotEvent {
+  const LoadCalendarTapDetails(this.calendarTapDetails);
+
+  final CalendarTapDetails calendarTapDetails;
+}
+
+class AddTimeslot extends TimeslotEvent {
+  const AddTimeslot(
+      {required this.title, required this.from, required this.to});
+
+  final String title;
+  final DateTime from;
+  final DateTime to;
+}

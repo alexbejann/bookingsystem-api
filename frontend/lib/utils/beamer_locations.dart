@@ -14,19 +14,19 @@ class BeamerLocations extends BeamLocation<BeamState> {
 
   @override
   List<String> get pathPatterns => [
-    '/login',
-    '/home',
-    '/home/timeslots',
-    '/home/addTimeslots',
-    '/home/bookings',
-    '/home/chatAdmin',
-    '/home/newEditOffice',
-    '/home/newEditWorkspace',
-  ];
+        '/login',
+        '/home',
+        '/home/timeslots/:workspaceId',
+        '/home/addTimeslots/:workspaceId/:from',
+        '/home/bookings',
+        '/home/chatAdmin',
+        '/home/newEditOffice',
+        '/home/newEditWorkspace',
+      ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
-    return [
+    final pages = [
       if (state.uri.pathSegments.contains('login'))
         const BeamPage(
           key: ValueKey('login'),
@@ -37,16 +37,6 @@ class BeamerLocations extends BeamLocation<BeamState> {
           key: ValueKey('home'),
           child: HomePage(),
         ),
-      if (state.uri.pathSegments.contains('timeslots'))
-        const BeamPage(
-          key: ValueKey('timeslots'),
-          child: TimeslotsPage(),
-        ),
-      // if (state.uri.pathSegments.contains('addTimeslots'))
-      //   const BeamPage(
-      //     key: ValueKey('addTimeslots'),
-      //     child: AddTimeSlotPage(calendarTapDetails: ),
-      //   ),
       if (state.uri.pathSegments.contains('bookings'))
         const BeamPage(
           key: ValueKey('bookings'),
@@ -67,7 +57,34 @@ class BeamerLocations extends BeamLocation<BeamState> {
           key: ValueKey('newEditWorkspace'),
           child: NewEditWorkspacePage(),
         ),
-
     ];
+    final fromParameter = state.pathParameters['from'];
+    final workspaceIdParameter = state.pathParameters['workspaceId'];
+    if (fromParameter != null && workspaceIdParameter != null) {
+      pages.add(
+        BeamPage(
+          fullScreenDialog: true,
+          key: ValueKey('addTimeslots-$fromParameter'),
+          child: AddTimeslotPage(
+            workspaceId: workspaceIdParameter,
+            from: DateTime.parse(fromParameter),
+            to: DateTime.parse(fromParameter).add(
+              const Duration(hours: 1),
+            ),
+          ),
+        ),
+      );
+    }
+    if (workspaceIdParameter != null && fromParameter == null) {
+      pages.add(
+        BeamPage(
+          key: ValueKey('timeslots-$workspaceIdParameter'),
+          child: TimeslotsPage(
+            workspaceId: workspaceIdParameter,
+          ),
+        ),
+      );
+    }
+    return pages;
   }
 }

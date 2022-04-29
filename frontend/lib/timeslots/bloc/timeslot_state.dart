@@ -12,8 +12,14 @@ class TimeslotLoading extends TimeslotState {
 }
 
 class TimeslotsLoaded extends TimeslotState {
-  TimeslotsLoaded(this.timeSlots);
+  TimeslotsLoaded({required this.workspaceId, required this.timeSlots});
   final List<Timeslot> timeSlots;
+  final String workspaceId;
+}
+
+class CalendarTapDetailsLoaded extends TimeslotState {
+  CalendarTapDetailsLoaded(this.calendarTapDetails);
+  final CalendarTapDetails calendarTapDetails;
 }
 
 class TimeslotError extends TimeslotState {

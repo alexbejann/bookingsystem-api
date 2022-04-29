@@ -1,30 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/add_timeslot/add_timeslot.dart';
+import 'package:frontend/add_timeslot/bloc/add_timeslot_bloc.dart';
 import 'package:frontend/timeslots/bloc/timeslot_bloc.dart';
 import 'package:frontend/timeslots/repositories/timeslot_repository.dart';
 import 'package:frontend/utils/utils.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-class AddTimeSlotPage extends StatelessWidget {
-  const AddTimeSlotPage({Key? key, required this.calendarTapDetails})
+class AddTimeslotPage extends StatelessWidget {
+  const AddTimeslotPage({Key? key,
+    required this.workspaceId,
+    required this.from,
+    required this.to,
+  })
       : super(key: key);
 
-  final CalendarTapDetails calendarTapDetails;
+  final DateTime from;
+  final DateTime to;
+  final String workspaceId;
 
   @override
   Widget build(BuildContext context) {
-    return AddTimeslotView(
-        calendarTapDetails: calendarTapDetails,
-      );
+    print('$from $to');
+    return RepositoryProvider(
+      create: (context) => TimeslotRepository(),
+      child: BlocProvider(
+        create: (context) => AddTimeslotBloc(
+          timeslotRepository: context.read<TimeslotRepository>(),
+          workspaceId: workspaceId,
+          from: from,
+          to: to,
+        ),
+        child: const AddTimeslotView(),
+      ),
+    );
   }
 }
 
 class AddTimeslotView extends StatefulWidget {
-  const AddTimeslotView({Key? key, required this.calendarTapDetails})
-      : super(key: key);
-
-  final CalendarTapDetails calendarTapDetails;
+  const AddTimeslotView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<AddTimeslotView> createState() => _AddTimeslotViewState();
@@ -149,11 +165,17 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
       return date.add(time);
     }
   }
-  
+
   Future saveForm() async {
     final isValid = _formKey.currentState!.validate();
     if (isValid) {
-      ///todo call bloc timeslot bloc to add timeslot
+      context.read<AddTimeslotBloc>().add(
+            SaveTimeslot(
+              title: titleController.text,
+              from: fromDate,
+              to: toDate,
+            ),
+          );
     }
   }
 
@@ -165,35 +187,47 @@ class _AddTimeslotViewState extends State<AddTimeslotView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    fromDate = widget.calendarTapDetails.date!;
-    toDate = widget.calendarTapDetails.date!.add(
-      const Duration(hours: 1),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const CloseButton(),
-        actions: buildEditingActions(),
-        title: Text(Utils.toDate(fromDate)),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              buildDateTimePickers(),
-            ],
-          ),
-        ),
-      ),
+    return BlocConsumer<AddTimeslotBloc, AddTimeslotState>(
+      listener: (context, state) {
+        if (state is SavedTimeslot) {
+          Navigator.of(context).maybePop();
+        } else if (state is SaveTimeslotFailure) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.error)));
+        }
+      },
+      builder: (context, state) {
+        if (state is AddTimeslotInitial) {
+          fromDate = state.from;
+          toDate = state.to;
+          return Scaffold(
+            appBar: AppBar(
+              leading: const CloseButton(),
+              actions: buildEditingActions(),
+              title: Text(Utils.toDate(fromDate)),
+            ),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(12),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    buildDateTimePickers(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        } else {
+          return const Scaffold(
+            body: Center(
+              child: Text('Something went wrong!'),
+            ),
+          );
+        }
+      },
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/add_timeslot/add_timeslot.dart';
 import 'package:frontend/app/model/timeslot.dart';
+import 'package:frontend/timeslots/repositories/timeslot_repository.dart';
 import 'package:frontend/timeslots/timeslots.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -14,78 +14,67 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 /// he is sure that he wants to book the tapped time
 /// The system would support only one hour of booking
 class TimeslotsPage extends StatelessWidget {
-  const TimeslotsPage({Key? key}) : super(key: key);
+  const TimeslotsPage({Key? key, required this.workspaceId}) : super(key: key);
+
+  final String workspaceId;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TimeslotBloc(),
-      child: TimeslotsView(),
+    return RepositoryProvider(
+      create: (context) => TimeslotRepository(),
+      child: BlocProvider(
+        create: (context) => TimeslotBloc(
+          timeslotRepository: context.read<TimeslotRepository>(),
+        )..add(GetTimeslots(workspaceId)),
+        child: const TimeslotsView(),
+      ),
     );
   }
 }
 
-class TimeslotsView extends StatefulWidget {
+class TimeslotsView extends StatelessWidget {
   const TimeslotsView({Key? key}) : super(key: key);
 
-  static const String routeName = '/timeslots';
+  Future<bool?> popupDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: const [
+            Icon(Icons.warning),
+            Text('Would you like to book?'),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('No'),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          ElevatedButton(
+            child: const Text('Yes'),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+  }
 
-  @override
-  State<TimeslotsView> createState() => _TimeslotsViewState();
-}
-
-class _TimeslotsViewState extends State<TimeslotsView> {
-  Future<void> addBooking(CalendarTapDetails calendarTapDetails) async {
+  void addBooking(
+    String workspaceId,
+    CalendarTapDetails calendarTapDetails,
+    BuildContext context,
+  ) async {
     if (calendarTapDetails.appointments == null) {
-      ///todo navigate to add timeslot page
-      ///todo with the initial datetime from calendar tap details
-      await showDialog<bool>(
-        context: context,
-        builder: (_) =>
-            AlertDialog(
-              title: Row(
-                children: const [
-                  Icon(Icons.warning),
-                  Text('Would you like to book?'),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('No'),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                ElevatedButton(
-                  child: const Text('Yes'),
-                  onPressed: () {
-                    context.beamToNamed('/addTimeslots', data: calendarTapDetails);
-                    // Navigator.push<MaterialPageRoute>(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         AddTimeSlotPage(
-                    //           calendarTapDetails: calendarTapDetails,
-                    //         ),
-                    //   ),
-                    // ).then((value) {
-                    //   Navigator.of(context).pop();
-                    // });
-                  },
-                ),
-              ],
-            ),
-      );
-      return;
+      final bookResult = await popupDialog(context);
+      if (bookResult != null && bookResult) {
+        context.beamToNamed(
+            '/home/addTimeslots/$workspaceId/${calendarTapDetails.date.toString()}');
+      }
     } else if (calendarTapDetails.appointments!.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('There is already a reservation!')),
       );
-      return;
     }
-  }
-  @override
-  void initState() {
-    super.initState();
-    //context.read<TimeslotBloc>().add(GetTimeslots());
   }
 
   @override
@@ -96,7 +85,10 @@ class _TimeslotsViewState extends State<TimeslotsView> {
       ),
       body: BlocConsumer<TimeslotBloc, TimeslotState>(
         listener: (context, state) {
-          // TODO: implement listener
+          if (state is TimeslotError) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.error)));
+          }
         },
         builder: (context, state) {
           if (state is TimeslotLoading) {
@@ -105,7 +97,7 @@ class _TimeslotsViewState extends State<TimeslotsView> {
             );
           } else if (state is TimeslotsLoaded) {
             return SfCalendar(
-              onTap: addBooking,
+              onTap: (value) => addBooking(state.workspaceId, value, context),
               view: CalendarView.workWeek,
               firstDayOfWeek: 1,
               dataSource: BookingDataSource(state.timeSlots),
@@ -113,7 +105,8 @@ class _TimeslotsViewState extends State<TimeslotsView> {
                 timeIntervalHeight: 100,
                 startHour: 9,
                 endHour: 17,
-              ),);
+              ),
+            );
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -124,16 +117,6 @@ class _TimeslotsViewState extends State<TimeslotsView> {
     );
   }
 }
-
-// BookingDataSource _getCalendarDataSource() {
-//   List<Booking> meetings = <Booking>[];
-//   meetings.add(Booking(
-//       bookingTitle: 'Workspace',
-//       from: DateTime(2022, 4, 21, 10),
-//       to: DateTime(2022, 4, 21, 12)));
-//
-//   return BookingDataSource(meetings);
-// }
 
 class BookingDataSource extends CalendarDataSource {
   BookingDataSource(List<Timeslot> source) {

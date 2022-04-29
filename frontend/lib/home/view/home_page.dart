@@ -174,7 +174,7 @@ class _HomeViewState extends State<HomeView> {
           } else if (state is WorkspaceLoaded) {
             return GroupedListView<Workspace, String>(
               elements: state.workspaces,
-              groupBy: (element) => element.office.name,
+              groupBy: (element) => element.office!.name,
               groupSeparatorBuilder: (value) => Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -215,7 +215,8 @@ class _HomeViewState extends State<HomeView> {
                     child: ListTile(
                       leading: const Icon(Icons.work),
                       title: Text(element.name),
-                      onTap: () => context.beamToNamed('/home/timeslots'),
+                      onTap: () => context
+                        ..beamToNamed('/home/timeslots/${element.id}'),
                     ),
                   ),
                 );
