@@ -65,6 +65,7 @@ query Query($workspaceId: ID!) {
     from
     workspaceID {
       id
+      name
     }
   }
 }

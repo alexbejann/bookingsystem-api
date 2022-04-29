@@ -46,14 +46,6 @@ mutation Mutation($title: String!, $from: DateTime!, $to: DateTime!, $userId: ID
     title
     from
     to
-    userID {
-      id
-    }
-  }
-}
-mutation DeleteWorkspace($timeslotId: ID!) {
-  removeTimeslot(timeslotID: $timeslotId) {
-    id
   }
 }
 ''';
