@@ -20,6 +20,9 @@ export default {
         addTimeslot: async (parent, args, {user}) => {
             checkPermission(user, false)
             console.log('addTimeslots', parent, args);
+            if (Timeslot.find({from: args.from, workspaceID: args.workspaceID})) {
+                throw new Error('There is already a booking for this timeslot.');
+            }
             const newTimeslot = new Timeslot(args);
             console.log('newTimeslot', newTimeslot);
             return await newTimeslot.save();
