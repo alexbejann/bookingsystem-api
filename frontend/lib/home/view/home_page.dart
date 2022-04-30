@@ -23,7 +23,8 @@ class HomePage extends StatelessWidget {
       create: (context) => WorkspaceRepository(),
       child: BlocProvider(
         create: (context) => WorkspaceBloc(
-            workspaceRepository: context.read<WorkspaceRepository>(),),
+          workspaceRepository: context.read<WorkspaceRepository>(),
+        ),
         child: const HomeView(),
       ),
     );
@@ -115,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
       },
     );
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -127,15 +128,24 @@ class _HomeViewState extends State<HomeView> {
     final l10n = context.l10n;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).bottomAppBarColor,
-        onPressed: () => pushPage(
-          context,
-          NewEditWorkspacePage(),
-        ),
-        child: const Icon(
-          Icons.add,
-        ),
+      floatingActionButton:
+          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+          return Visibility(
+            /// Limited functionality to admin user
+            visible: state.user.admin,
+            child: FloatingActionButton(
+              backgroundColor: Theme.of(context).bottomAppBarColor,
+              onPressed: () => pushPage(
+                context,
+                const NewEditWorkspacePage(),
+              ),
+              child: const Icon(
+                Icons.add,
+              ),
+            ),
+          );
+        },
       ),
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       bottomNavigationBar: BottomAppBar(
@@ -152,10 +162,18 @@ class _HomeViewState extends State<HomeView> {
                   await _optionMenu(context);
                 },
               ),
-              IconButton(
-                icon: const Icon(Icons.more_vert),
-                onPressed: () async {
-                  await _settingModalBottomSheet(context);
+              BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                builder: (context, state) {
+                  return Visibility(
+                    /// Limited functionality to admin user
+                    visible: state.user.admin,
+                    child: IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () async {
+                        await _settingModalBottomSheet(context);
+                      },
+                    ),
+                  );
                 },
               ),
             ],
@@ -221,8 +239,8 @@ class _HomeViewState extends State<HomeView> {
                     child: ListTile(
                       leading: const Icon(Icons.work),
                       title: Text(element.name),
-                      onTap: () => context
-                        ..beamToNamed('/home/timeslots/${element.id}'),
+                      onTap: () =>
+                          context..beamToNamed('/home/timeslots/${element.id}'),
                     ),
                   ),
                 );
