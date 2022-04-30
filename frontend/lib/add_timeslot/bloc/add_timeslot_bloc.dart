@@ -23,11 +23,13 @@ class AddTimeslotBloc extends Bloc<AddTimeslotEvent, AddTimeslotState> {
         try {
           emit(
             SavedTimeslot(
-              timeslot: await timeslotRepository
-                  .addTimeslot(variables: <String, dynamic>{
-                'workspaceId': workspaceId,
-                'from': event.from.millisecondsSinceEpoch.toString(),
-                'to': event.to.millisecondsSinceEpoch.toString(),},),
+              timeslot: await timeslotRepository.addTimeslot(
+                variables: <String, dynamic>{
+                  'workspaceId': workspaceId,
+                  'from': event.from.millisecondsSinceEpoch.toString(),
+                  'to': event.to.millisecondsSinceEpoch.toString(),
+                },
+              ),
             ),
           );
         } catch (e) {
