@@ -15,3 +15,9 @@ class AddOffice extends OfficeEvent {
 
   final String name;
 }
+
+class RenameOffice extends OfficeEvent {
+  const RenameOffice({required this.name});
+
+  final String name;
+}

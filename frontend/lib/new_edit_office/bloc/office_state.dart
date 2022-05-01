@@ -17,6 +17,13 @@ class OfficeLoaded extends OfficeState {
   final List<Office> offices;
 }
 
+class SavedOffice extends OfficeState {
+
+  const SavedOffice({required this.office});
+
+  final Office office;
+}
+
 class OfficeError extends OfficeState {
   const OfficeError(this.error);
   final String error;

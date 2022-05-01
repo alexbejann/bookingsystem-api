@@ -24,9 +24,6 @@ mutation Mutation($newName: String!, $officeId: ID!) {
   renameOffice(newName: $newName, officeID: $officeId) {
     id
     name
-    organizationID {
-      id
-    }
   }
 }
 ''';
