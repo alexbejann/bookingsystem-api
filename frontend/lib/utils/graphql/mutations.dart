@@ -60,9 +60,6 @@ mutation Mutation($name: String!, $officeId: ID!) {
   addWorkspace(name: $name, officeID: $officeId) {
     id
     name
-    officeID {
-      id
-    }
   }
 }
 ''';
@@ -72,9 +69,6 @@ mutation Mutation($newName: String!, $workspaceId: ID!) {
   renameWorkspace(newName: $newName, workspaceID: $workspaceId) {
     id
     name
-    officeID {
-      id
-    }
   }
 }
 ''';
