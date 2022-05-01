@@ -1,6 +1,7 @@
 'use strict';
 import Office from '../models/office';
-import {checkPermission} from "../utils/auth";
+import {checkPermission} from '../utils/auth';
+import Workspace from '../models/workspace';
 
 export default {
     Query: {
@@ -26,6 +27,7 @@ export default {
         deleteOffice: async (parent, args, {user}) => {
             checkPermission(user, true);
             console.log('deleteOffice', parent, args);
+            await Workspace.deleteMany({officeID: args.id});
             return await Office.findOneAndDelete({_id: args.id});
         }
     },
