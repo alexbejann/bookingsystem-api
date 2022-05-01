@@ -35,7 +35,6 @@ class OfficeRepository {
     final resultOffice = result.data!['office'] as Map<String, dynamic>;
     print(resultOffice);
     return Office.fromJson(resultOffice);
-    //return token;
   }
 
   Future<Office> renameOffice({
@@ -51,6 +50,5 @@ class OfficeRepository {
     final resultOffice = result.data!['renameOffice'] as Map<String, dynamic>;
     print(resultOffice);
     return Office.fromJson(resultOffice);
-    //return token;
   }
 }
