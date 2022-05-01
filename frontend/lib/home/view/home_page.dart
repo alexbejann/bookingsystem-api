@@ -39,14 +39,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  void pushPage(BuildContext context, Widget nextPage) {
-    Navigator.push<MaterialPageRoute>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => nextPage,
-      ),
-    );
-  }
 
   void deleteWorkspace() {
     //todo delete workspace with a popup for confirmation
@@ -61,18 +53,12 @@ class _HomeViewState extends State<HomeView> {
             ListTile(
               leading: const Icon(Icons.star),
               title: const Text('My bookings'),
-              onTap: () {
-                //todo go to my bookings
-                pushPage(context, const MyBookingsPage());
-              },
+              onTap: () => context.beamToNamed('/home/bookings'),
             ),
             ListTile(
               leading: const Icon(Icons.message),
               title: const Text('Chat Admin'),
-              onTap: () {
-                //todo go to admin chat with socket io
-                pushPage(context, const ChatAdmin());
-              },
+              onTap: () => context.beamToNamed('/home/chatAdmin'),
             ),
             ListTile(
               leading: const Icon(Icons.logout),
@@ -94,17 +80,14 @@ class _HomeViewState extends State<HomeView> {
             ListTile(
               leading: const Icon(Icons.add),
               title: const Text('Add office'),
-              onTap: () => pushPage(
-                context,
-                const NewEditOfficePage(
-                  isNewOffice: true,
-                ),
-              ),
+              onTap: () =>
+                  context.beamToNamed('/home/newEditOffice?isNew=true'),
             ),
             ListTile(
               leading: const Icon(Icons.edit),
               title: const Text('Rename office'),
-              onTap: () => pushPage(context, const NewEditOfficePage()),
+              onTap: () =>
+                  context.beamToNamed('/home/newEditOffice?isNew=false'),
             ),
             ListTile(
               leading: const Icon(Icons.delete_forever),
@@ -136,10 +119,8 @@ class _HomeViewState extends State<HomeView> {
             visible: state.user.admin,
             child: FloatingActionButton(
               backgroundColor: Theme.of(context).bottomAppBarColor,
-              onPressed: () => pushPage(
-                context,
-                const NewEditWorkspacePage(),
-              ),
+              onPressed: () =>
+                  context.beamToNamed('/home/newEditWorkspace'),
               child: const Icon(
                 Icons.add,
               ),
@@ -223,11 +204,9 @@ class _HomeViewState extends State<HomeView> {
                           label: 'Delete',
                         ),
                         SlidableAction(
-                          onPressed: (BuildContext context) => pushPage(
-                            context,
-                            NewEditWorkspaceView(
-                              editWorkspace: element,
-                            ),
+                          onPressed: (BuildContext context) =>
+                              context.beamToNamed(
+                            '/home/newEditWorkspace?workspace=${element.id}&name=${element.name}',
                           ),
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
