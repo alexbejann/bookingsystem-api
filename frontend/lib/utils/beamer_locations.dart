@@ -47,17 +47,33 @@ class BeamerLocations extends BeamLocation<BeamState> {
           key: ValueKey('chatAdmin'),
           child: ChatAdmin(),
         ),
-      // if (state.uri.pathSegments.contains('newEditOffice'))
-      //   const BeamPage(
-      //     key: ValueKey('newEditOffice'),
-      //     child: NewEditOfficePage(isNewOffice: (state.queryParameters['isNewOffice'] as bool),),
-      //   ),
-      if (state.uri.pathSegments.contains('newEditWorkspace'))
-        const BeamPage(
-          key: ValueKey('newEditWorkspace'),
-          child: NewEditWorkspacePage(),
-        ),
     ];
+    final newEditOfficeQuery = state.queryParameters['isNew'];
+    if (state.uri.pathSegments.contains('newEditOffice') &&
+        newEditOfficeQuery != null) {
+      pages.add(
+        BeamPage(
+          key: ValueKey('newEditOffice-$newEditOfficeQuery'),
+          child: NewEditOfficePage(
+            isNewOffice: newEditOfficeQuery.toLowerCase() == 'true',
+          ),
+        ),
+      );
+    }
+
+    if (state.uri.pathSegments.contains('newEditWorkspace')) {
+      final workspaceIdQuery = state.queryParameters['workspace'];
+      pages.add(
+        BeamPage(
+          key: ValueKey('newEditWorkspace-$workspaceIdQuery'),
+          child: NewEditWorkspacePage(
+            workspaceId: state.queryParameters['workspace'],
+            workspaceName: state.queryParameters['name'],
+          ),
+        ),
+      );
+    }
+
     final fromParameter = state.pathParameters['from'];
     final workspaceIdParameter = state.pathParameters['workspaceId'];
     if (fromParameter != null && workspaceIdParameter != null) {
