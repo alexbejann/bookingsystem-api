@@ -37,7 +37,7 @@ class NewEditWorkspacePage extends StatelessWidget {
   }
 }
 
-class NewEditWorkspaceView extends StatelessWidget {
+class NewEditWorkspaceView extends StatefulWidget {
   NewEditWorkspaceView({
     Key? key,
     this.workspaceName,
@@ -46,15 +46,23 @@ class NewEditWorkspaceView extends StatelessWidget {
 
   final String? workspaceName;
   final String? workspaceId;
+
+  @override
+  State<NewEditWorkspaceView> createState() => _NewEditWorkspaceViewState();
+}
+
+class _NewEditWorkspaceViewState extends State<NewEditWorkspaceView> {
   late TextEditingController _oldListTitleController;
+
   final workspaceNameController = TextEditingController();
-  String officeId = '';
+
+  String? officeId;
 
   @override
   Widget build(BuildContext context) {
     final focusNode = FocusNode()..requestFocus();
     _oldListTitleController = TextEditingController(
-      text: workspaceName ?? 'Create a new Workspace',
+      text: widget.workspaceName ?? 'Create a new Workspace',
     );
     return Scaffold(
       body: BlocListener<EditWorkspaceBloc, EditWorkspaceState>(
@@ -73,7 +81,7 @@ class NewEditWorkspaceView extends StatelessWidget {
               title: TextField(
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: workspaceId == null
+                  hintText: widget.workspaceId == null
                       ? 'Create new workspace'
                       : 'Edit workspace',
                 ),
@@ -85,18 +93,18 @@ class NewEditWorkspaceView extends StatelessWidget {
                 onPressed: () {
                   // bloc office add/edit
                   if (workspaceNameController.text.isNotEmpty &&
-                      workspaceId != null) {
+                      widget.workspaceId != null) {
                     context.read<EditWorkspaceBloc>().add(
                           RenameWorkspace(
                             name: workspaceNameController.text,
-                            id: workspaceId!,
+                            id: widget.workspaceId!,
                           ),
                         );
                   } else {
                     context.read<EditWorkspaceBloc>().add(
                           CreateWorkspace(
                             name: workspaceNameController.text,
-                            officeId: officeId,
+                            officeId: officeId!,
                           ),
                         );
                   }
@@ -116,7 +124,7 @@ class NewEditWorkspaceView extends StatelessWidget {
             ),
             const Divider(),
             Visibility(
-              visible: workspaceId == null,
+              visible: widget.workspaceId == null,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: BlocBuilder<EditWorkspaceBloc, EditWorkspaceState>(
@@ -124,13 +132,19 @@ class NewEditWorkspaceView extends StatelessWidget {
                     if (state is OfficesLoaded) {
                       return DropdownButton<String>(
                         hint: const Text('Please choose an office'),
+                        value: officeId,
                         items: state.offices.map((Office office) {
+                          officeId = office.id;
                           return DropdownMenuItem<String>(
                             value: office.id,
                             child: Text(office.name),
                           );
                         }).toList(),
-                        onChanged: (value) => officeId = value!,
+                        onChanged: (value) {
+                          setState(() {
+                            officeId = value;
+                          });
+                        },
                       );
                     } else {
                       return const Center(

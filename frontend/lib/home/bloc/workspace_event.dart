@@ -29,7 +29,7 @@ class WorkspaceEdited extends WorkspaceEvent {
 }
 
 class DeleteWorkspace extends WorkspaceEvent {
-  const DeleteWorkspace(this.workspace);
+  const DeleteWorkspace(this.id);
 
-  final Workspace workspace;
+  final String id;
 }

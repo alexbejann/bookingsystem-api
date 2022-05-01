@@ -60,7 +60,7 @@ class _MyBookingsViewState extends State<MyBookingsView> {
                   leading: const Icon(Icons.work),
                   title: Text(
                       'From ${state.bookings[index].from} -> To ${state.bookings[index].to}'),
-                  subtitle: Text(state.bookings[index].workspaceID!.name),
+                  subtitle: Text(state.bookings[index].workspaceID!.name!),
                 );
               },
             );

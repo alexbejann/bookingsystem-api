@@ -9,12 +9,12 @@ class Workspace extends Equatable {
   });
 
   String id;
-  String name;
+  String? name;
   Office? office;
 
   factory Workspace.fromJson(Map<String, dynamic> json) => Workspace(
         id: json['id'] as String,
-        name: json['name'] as String,
+        name: json['name'] != null? json['name'] as String : null,
         office: json['officeID'] != null ?
           Office.fromJson(json['officeID'] as Map<String, dynamic>) : null,
       );

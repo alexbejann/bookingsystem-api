@@ -23,3 +23,9 @@ class WorkspaceError extends WorkspaceState {
   const WorkspaceError(this.error);
   final String error;
 }
+
+class DeletedWorkspace extends WorkspaceState {
+  const DeletedWorkspace(this.workspace);
+  final Workspace workspace;
+}
+

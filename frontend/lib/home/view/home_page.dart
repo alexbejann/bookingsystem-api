@@ -169,6 +169,8 @@ class _HomeViewState extends State<HomeView> {
           if (state is WorkspaceError) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.error)));
+          } else if (state is DeletedWorkspace) {
+            context.read<WorkspaceBloc>().add(const GetWorkspaces());
           }
         },
         builder: (context, state) {
@@ -217,7 +219,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     child: ListTile(
                       leading: const Icon(Icons.work),
-                      title: Text(element.name),
+                      title: Text(element.name!),
                       onTap: () =>
                           context..beamToNamed('/home/timeslots/${element.id}'),
                     ),

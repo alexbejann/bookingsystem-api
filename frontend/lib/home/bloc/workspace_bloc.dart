@@ -21,6 +21,16 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
       (event, emit) async =>
           emit(WorkspaceLoaded(await workspaceRepository.getWorkspaces())),
     );
+
+    on<DeleteWorkspace>(
+      (event, emit) async => emit(
+        DeletedWorkspace(
+          await workspaceRepository.deleteWorkspace(
+            workspaceId: event.id,
+          ),
+        ),
+      ),
+    );
   }
 
   final WorkspaceRepository workspaceRepository;

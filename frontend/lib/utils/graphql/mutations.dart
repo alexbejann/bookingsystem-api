@@ -77,6 +77,7 @@ const String deleteWorkspace = r'''
 mutation Mutation($deleteWorkspaceId: ID!) {
   deleteWorkspace(id: $deleteWorkspaceId) {
     id
+    name
   }
 }
 ''';

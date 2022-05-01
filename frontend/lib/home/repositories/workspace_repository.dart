@@ -17,7 +17,7 @@ class WorkspaceRepository {
         'organizationId': user.organizationID,
       },
     );
-    assert(result.data != null, 'Never null');
+    assert(result.data != null, 'getWorkspaces null');
     final resultWorkspaces = result.data!['workspacesByOrg'] as List<dynamic>;
     return Workspace.fromListDynamic(resultWorkspaces);
   }
@@ -33,7 +33,7 @@ class WorkspaceRepository {
         'workspaceId': workspaceId,
       },
     );
-    assert(result.data != null, 'Never null');
+    assert(result.data != null, 'renameWorkspace null');
     final resultWorkspaces =
         result.data!['renameWorkspace'] as Map<String, dynamic>;
     return Workspace.fromJson(resultWorkspaces);
@@ -47,7 +47,7 @@ class WorkspaceRepository {
       mutations.addWorkspace,
       variables: <String, dynamic>{'name': workspaceName, 'officeId': officeId},
     );
-    assert(result.data != null, 'Never null');
+    assert(result.data != null, 'createWorkspace null');
     final resultWorkspaces =
         result.data!['addWorkspace'] as Map<String, dynamic>;
     return Workspace.fromJson(resultWorkspaces);
@@ -60,7 +60,8 @@ class WorkspaceRepository {
       mutations.deleteWorkspace,
       variables: <String, dynamic>{'deleteWorkspaceId': workspaceId},
     );
-    assert(result.data != null, 'Never null');
+    print(result.data);
+    assert(result.data != null, 'deleteWorkspace null');
     final resultWorkspaces =
     result.data!['deleteWorkspace'] as Map<String, dynamic>;
     return Workspace.fromJson(resultWorkspaces);
