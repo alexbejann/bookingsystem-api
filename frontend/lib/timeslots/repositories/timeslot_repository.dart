@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:frontend/app/model/timeslot.dart';
 import 'package:frontend/app/model/user.dart';
 import 'package:frontend/utils/graphql/graphql_service.dart';
+import 'package:frontend/utils/graphql/mutations.dart' as mutations;
+import 'package:frontend/utils/graphql/queries.dart' as queries;
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class TimeslotRepository {
@@ -13,7 +15,8 @@ class TimeslotRepository {
     required Map<String, dynamic> variables,
   }) async {
     print(variables);
-    QueryResult? result = await graphQLService.getTimeslots(
+    QueryResult? result = await graphQLService.performQuery(
+      queries.timeslotsByWorkspaceId
       variables: variables,
     );
 
@@ -30,7 +33,8 @@ class TimeslotRepository {
     variables['title'] = user.username;
     variables['userId'] = user.id;
     print(variables);
-    QueryResult? result = await graphQLService.addTimeslotMutation(
+    QueryResult? result = await graphQLService.performQuery(
+      mutations.addTimeslot
       variables: variables,
     );
     print(result);
@@ -41,7 +45,8 @@ class TimeslotRepository {
 
   Future<List<Timeslot>> getBookings() async {
     final user = await User.getUser();
-    QueryResult? result = await graphQLService.getBookings(
+    QueryResult? result = await graphQLService.performQuery(
+      queries.userBookings
       variables: <String, dynamic> {
         'userId': user.id,
       },

@@ -3,6 +3,7 @@ import 'package:frontend/app/model/office.dart';
 import 'package:frontend/app/model/user.dart';
 import 'package:frontend/utils/graphql/graphql_service.dart';
 import 'package:frontend/utils/graphql/mutations.dart' as mutations;
+import 'package:frontend/utils/graphql/queries.dart' as queries;
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class OfficeRepository {
@@ -11,7 +12,8 @@ class OfficeRepository {
 
   Future<List<Office>> getOffices() async {
     final user = await User.getUser();
-    QueryResult? result = await graphQLService.getOffices(
+    QueryResult? result = await graphQLService.performQuery(
+      queries.officesByOrg
       variables: <String, dynamic>{
         'organizationId': user.organizationID,
       },

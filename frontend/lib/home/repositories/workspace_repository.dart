@@ -4,6 +4,7 @@ import 'package:frontend/app/model/user.dart';
 import 'package:frontend/app/model/workspace.dart';
 import 'package:frontend/utils/graphql/graphql_service.dart';
 import 'package:frontend/utils/graphql/mutations.dart' as mutations;
+import 'package:frontend/utils/graphql/queries.dart' as queries;
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class WorkspaceRepository {
@@ -12,7 +13,8 @@ class WorkspaceRepository {
 
   Future<List<Workspace>> getWorkspaces() async {
     final user = await User.getUser();
-    QueryResult? result = await graphQLService.getWorkspaces(
+    QueryResult? result = await graphQLService.performQuery(
+      queries.workspacesByOrg
       variables: <String, dynamic>{
         'organizationId': user.organizationID,
       },

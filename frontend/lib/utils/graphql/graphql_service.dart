@@ -58,49 +58,4 @@ class GraphQLService {
     final result = await _client.mutate(options);
     return result;
   }
-
-  Future<QueryResult> getWorkspaces({
-    required Map<String, dynamic> variables,
-  }) async {
-    final options = MutationOptions(
-        document: gql(queries.workspacesByOrg), variables: variables,);
-    final result = await _client.mutate(options);
-    return result;
-  }
-
-  Future<QueryResult> getOffices({
-    required Map<String, dynamic> variables,
-  }) async {
-    final options = MutationOptions(
-      document: gql(queries.officesByOrg), variables: variables,);
-    final result = await _client.mutate(options);
-    return result;
-  }
-
-  Future<QueryResult> getTimeslots({
-    required Map<String, dynamic> variables,
-  }) async {
-    final options = MutationOptions(
-      document: gql(queries.timeslotsByWorkspaceId), variables: variables,);
-    final result = await _client.mutate(options);
-    return result;
-  }
-
-  Future<QueryResult> addTimeslotMutation({
-    required Map<String, dynamic> variables,
-  }) async {
-    final options = MutationOptions(
-      document: gql(mutations.addTimeslot), variables: variables,);
-    final result = await _client.mutate(options);
-    return result;
-  }
-
-  Future<QueryResult> getBookings({
-    required Map<String, dynamic> variables,
-  }) async {
-    final options = MutationOptions(
-      document: gql(queries.userBookings), variables: variables,);
-    final result = await _client.mutate(options);
-    return result;
-  }
 }
