@@ -134,7 +134,6 @@ class _NewEditWorkspaceViewState extends State<NewEditWorkspaceView> {
                         hint: const Text('Please choose an office'),
                         value: officeId,
                         items: state.offices.map((Office office) {
-                          officeId = office.id;
                           return DropdownMenuItem<String>(
                             value: office.id,
                             child: Text(office.name),
