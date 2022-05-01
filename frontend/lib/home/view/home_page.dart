@@ -196,7 +196,7 @@ class _HomeViewState extends State<HomeView> {
                           onPressed: (BuildContext context) {
                             context
                                 .read<WorkspaceBloc>()
-                                .add(DeleteWorkspace(element));
+                                .add(DeleteWorkspace(element.id));
                           },
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
