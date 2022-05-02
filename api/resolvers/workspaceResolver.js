@@ -1,6 +1,7 @@
 'use strict';
 import Workspace from '../models/workspace';
 import {checkPermission} from "../utils/auth";
+import Timeslot from "../models/timeslot";
 
 export default {
     Query: {
@@ -38,6 +39,7 @@ export default {
         deleteWorkspace: async (parent, args, {user}) => {
             checkPermission(user, true);
             console.log('deleteWorkspace', parent, args);
+            await Timeslot.deleteMany({workspaceID: args.id});
             return await Workspace.findOneAndDelete({_id: args.id});
         }
     },
