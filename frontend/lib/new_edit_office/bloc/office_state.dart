@@ -1,30 +1,30 @@
 part of 'office_bloc.dart';
 
-@immutable
-abstract class OfficeState {
-  const OfficeState();
-}
+enum OfficeStatus { initial, loading, success, failure }
 
-class OfficeInitial extends OfficeState {}
+class OfficeState extends Equatable {
+  const OfficeState({
+    this.status = OfficeStatus.initial,
+    this.offices = const [],
+  });
 
-class OfficeLoading extends OfficeState {
-  const OfficeLoading();
-}
-
-class OfficeLoaded extends OfficeState {
-  const OfficeLoaded(this.offices);
-
+  final OfficeStatus status;
   final List<Office> offices;
-}
 
-class SavedOffice extends OfficeState {
+  OfficeState copyWith({
+    OfficeStatus Function()? status,
+    List<Office> Function()? offices,
+    Office? Function()? lastDeleted,
+  }) {
+    return OfficeState(
+      status: status != null ? status() : this.status,
+      offices: offices != null ? offices() : this.offices,
+    );
+  }
 
-  const SavedOffice({required this.office});
-
-  final Office office;
-}
-
-class OfficeError extends OfficeState {
-  const OfficeError(this.error);
-  final String error;
+  @override
+  List<Object?> get props => [
+    offices,
+    status,
+  ];
 }

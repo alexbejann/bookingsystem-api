@@ -40,5 +40,5 @@ class Workspace extends Equatable {
   }
 
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [id, name, office];
 }

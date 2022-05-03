@@ -9,12 +9,10 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class TimeslotRepository {
   final graphQLService = GraphQLService();
-  String token = '';
 
   Future<List<Timeslot>> getTimeslots({
     required Map<String, dynamic> variables,
   }) async {
-    print(variables);
     QueryResult? result = await graphQLService.performQuery(
       queries.timeslotsByWorkspaceId
       variables: variables,
@@ -32,16 +30,27 @@ class TimeslotRepository {
     final user = await User.getUser();
     variables['title'] = user.username;
     variables['userId'] = user.id;
-    print(variables);
     QueryResult? result = await graphQLService.performQuery(
       mutations.addTimeslot
       variables: variables,
     );
-    print(result);
     assert(result.data != null, 'addTimeslot null');
     final resultTimeslots = result.data!['addTimeslot'] as Map<String, dynamic>;
     return Timeslot.fromJson(resultTimeslots);
   }
+
+  Future<Timeslot> removeTimeslot({
+    required Map<String, dynamic> variables,
+  }) async {
+    QueryResult? result = await graphQLService.performQuery(
+      mutations.removeTimeslot
+      variables: variables,
+    );
+    assert(result.data != null, 'removeTimeslot null');
+    final resultTimeslots = result.data!['removeTimeslot'] as Map<String, dynamic>;
+    return Timeslot.fromJson(resultTimeslots);
+  }
+
 
   Future<List<Timeslot>> getBookings() async {
     final user = await User.getUser();

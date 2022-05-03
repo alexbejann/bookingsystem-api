@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/app/model/office.dart';
+import 'package:frontend/home/home.dart';
 import 'package:frontend/home/repositories/workspace_repository.dart';
+import 'package:frontend/new_edit_office/new_edit_office.dart';
 import 'package:frontend/new_edit_office/repositories/office_repository.dart';
 import 'package:frontend/new_edit_workspace/bloc/edit_workspace_bloc.dart';
 
@@ -14,31 +16,40 @@ class NewEditWorkspacePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
+    return MultiBlocProvider(
       providers: [
-        RepositoryProvider<OfficeRepository>(
-          create: (context) => OfficeRepository(),
+        BlocProvider<EditWorkspaceBloc>(
+          create: (BuildContext context) => EditWorkspaceBloc(
+            workspaceRepository: context.read<WorkspaceRepository>(),
+            workspaceName: workspaceName,
+            workspaceId: workspaceId,
+          ),
         ),
-        RepositoryProvider<WorkspaceRepository>(
-          create: (context) => WorkspaceRepository(),
+        BlocProvider<OfficeBloc>(
+          create: (BuildContext context) => OfficeBloc(
+            officeRepository: context.read<OfficeRepository>(),
+          )..add(const GetOffices()),
         ),
       ],
-      child: BlocProvider(
-        create: (context) => EditWorkspaceBloc(
-          officeRepository: context.read<OfficeRepository>(),
-          workspaceRepository: context.read<WorkspaceRepository>(),
-        )..add(const GetOffices()),
-        child: NewEditWorkspaceView(
-          workspaceId: workspaceId,
-          workspaceName: workspaceName,
-        ),
+      child: BlocListener<EditWorkspaceBloc, EditWorkspaceState>(
+        listenWhen: (previous, current) =>
+            previous.status != current.status &&
+            current.status == EditWorkspaceStatus.success,
+        listener: (context, state) {
+          if (state.lastEdited != null) {
+            BlocProvider.of<WorkspaceBloc>(context)
+                .add(RecentlyEditedWorkspace(state.lastEdited!));
+          }
+          Navigator.of(context).pop();
+        },
+        child: const NewEditWorkspaceView(),
       ),
     );
   }
 }
 
 class NewEditWorkspaceView extends StatefulWidget {
-  NewEditWorkspaceView({
+  const NewEditWorkspaceView({
     Key? key,
     this.workspaceName,
     this.workspaceId,
@@ -53,24 +64,41 @@ class NewEditWorkspaceView extends StatefulWidget {
 
 class _NewEditWorkspaceViewState extends State<NewEditWorkspaceView> {
   late TextEditingController _oldListTitleController;
-
+  final _formKey = GlobalKey<FormState>();
   final workspaceNameController = TextEditingController();
 
   String? officeId;
 
+  void saveForm(BuildContext context, String? workspaceId) {
+    final isValid = _formKey.currentState!.validate();
+
+    if (isValid) {
+      context.read<EditWorkspaceBloc>().add(
+            EditWorkspaceSubmitted(
+              name: workspaceNameController.text,
+              workspaceId: workspaceId,
+              officeId: officeId,
+            ),
+          );
+    }
+  }
+
+  @override
+  void dispose() {
+    workspaceNameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final focusNode = FocusNode()..requestFocus();
+    final state = context.watch<EditWorkspaceBloc>().state;
     _oldListTitleController = TextEditingController(
-      text: widget.workspaceName ?? 'Create a new Workspace',
+      text: state.workspaceName ?? 'Create a new Workspace',
     );
     return Scaffold(
-      body: BlocListener<EditWorkspaceBloc, EditWorkspaceState>(
-        listener: (context, state) {
-          if (state is SavedWorkspace) {
-            Navigator.of(context).maybePop();
-          }
-        },
+      body: Form(
+        key: _formKey,
         child: ListView(
           children: [
             ListTile(
@@ -81,7 +109,7 @@ class _NewEditWorkspaceViewState extends State<NewEditWorkspaceView> {
               title: TextField(
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: widget.workspaceId == null
+                  hintText: state.workspaceId == null
                       ? 'Create new workspace'
                       : 'Edit workspace',
                 ),
@@ -90,31 +118,14 @@ class _NewEditWorkspaceViewState extends State<NewEditWorkspaceView> {
                 controller: _oldListTitleController,
               ),
               trailing: TextButton(
-                onPressed: () {
-                  // bloc office add/edit
-                  if (workspaceNameController.text.isNotEmpty &&
-                      widget.workspaceId != null) {
-                    context.read<EditWorkspaceBloc>().add(
-                          RenameWorkspace(
-                            name: workspaceNameController.text,
-                            id: widget.workspaceId!,
-                          ),
-                        );
-                  } else {
-                    context.read<EditWorkspaceBloc>().add(
-                          CreateWorkspace(
-                            name: workspaceNameController.text,
-                            officeId: officeId!,
-                          ),
-                        );
-                  }
-                },
+                onPressed: () => saveForm(context, state.workspaceId),
                 child: const Text('Done'),
               ),
             ),
             const Divider(),
             ListTile(
-              title: TextField(
+              title: TextFormField(
+                validator: (value) => value == null ? 'Field required' : null,
                 focusNode: focusNode,
                 controller: workspaceNameController,
                 decoration:
@@ -124,13 +135,15 @@ class _NewEditWorkspaceViewState extends State<NewEditWorkspaceView> {
             ),
             const Divider(),
             Visibility(
-              visible: widget.workspaceId == null,
+              visible: state.workspaceId == null,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: BlocBuilder<EditWorkspaceBloc, EditWorkspaceState>(
+                child: BlocBuilder<OfficeBloc, OfficeState>(
                   builder: (context, state) {
-                    if (state is OfficesLoaded) {
-                      return DropdownButton<String>(
+                    if (state.offices.isNotEmpty) {
+                      return DropdownButtonFormField<String>(
+                        validator: (value) =>
+                            value == null ? 'Field required' : null,
                         hint: const Text('Please choose an office'),
                         value: officeId,
                         items: state.offices.map((Office office) {

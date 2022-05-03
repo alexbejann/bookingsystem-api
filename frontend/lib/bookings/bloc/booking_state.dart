@@ -1,24 +1,35 @@
 part of 'booking_bloc.dart';
 
-@immutable
-abstract class BookingState {
+enum BookingStatus { initial, loading, success, failure }
 
-  const BookingState();
-}
+class BookingState extends Equatable {
+  const BookingState({
+    this.status = BookingStatus.initial,
+    this.bookings = const [],
+    this.lastDeletedTimeslot,
+  });
 
-class BookingInitial extends BookingState {
-
-  const BookingInitial();
-}
-
-class BookingsLoaded extends BookingState {
-
-  const BookingsLoaded(this.bookings);
+  final BookingStatus status;
   final List<Timeslot> bookings;
-}
+  final Timeslot? lastDeletedTimeslot;
 
-class BookingsError extends BookingState {
+  BookingState copyWith({
+    BookingStatus Function()? status,
+    List<Timeslot> Function()? bookings,
+    Timeslot? Function()? lastDeleted,
+  }) {
+    return BookingState(
+      status: status != null ? status() : this.status,
+      bookings: bookings != null ? bookings() : this.bookings,
+      lastDeletedTimeslot:
+      lastDeleted != null ? lastDeleted() : lastDeletedTimeslot,
+    );
+  }
 
-  const BookingsError(this.error);
-  final String error;
+  @override
+  List<Object?> get props => [
+    bookings,
+    status,
+    lastDeletedTimeslot,
+  ];
 }

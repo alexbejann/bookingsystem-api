@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:frontend/app/model/timeslot.dart';
 import 'package:frontend/timeslots/repositories/timeslot_repository.dart';
 import 'package:meta/meta.dart';

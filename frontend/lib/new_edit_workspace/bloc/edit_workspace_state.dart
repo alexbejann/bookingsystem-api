@@ -1,26 +1,47 @@
 part of 'edit_workspace_bloc.dart';
 
-@immutable
-abstract class EditWorkspaceState {
+enum EditWorkspaceStatus { initial, loading, success, failure }
 
-  const EditWorkspaceState();
+extension EditWorkspaceStatusX on EditWorkspaceStatus {
+  bool get isLoadingOrSuccess => [
+    EditWorkspaceStatus.loading,
+    EditWorkspaceStatus.success,
+  ].contains(this);
 }
 
-class EditWorkspaceInitial extends EditWorkspaceState {
+class EditWorkspaceState extends Equatable {
+  const EditWorkspaceState({
+    this.status = EditWorkspaceStatus.initial,
+    this.workspaceName,
+    this.workspaceId,
+    this.officeId,
+    this.lastEdited,
+  });
 
-  const EditWorkspaceInitial();
-}
+  final EditWorkspaceStatus status;
+  final String? workspaceName;
+  final String? workspaceId;
+  final String? officeId;
+  final Workspace? lastEdited;
 
-class OfficesLoaded extends EditWorkspaceState {
+  bool get isNew => workspaceName == null;
 
-  const OfficesLoaded(this.offices);
+  EditWorkspaceState copyWith({
+    EditWorkspaceStatus? status,
+    String? workspaceName,
+    String? workspaceId,
+    String? officeId,
+    Workspace? lastEdited,
+  }) {
+    return EditWorkspaceState(
+      status: status ?? this.status,
+      workspaceName: workspaceName ?? this.workspaceName,
+      workspaceId: workspaceId ?? this.workspaceId,
+      officeId:  officeId ?? this.officeId,
+      lastEdited: lastEdited ?? this.lastEdited,
+    );
+  }
 
-  final List<Office> offices;
-}
-
-class SavedWorkspace extends EditWorkspaceState {
-
-  const SavedWorkspace(this.workspace);
-
-  final Workspace workspace;
+  @override
+  List<Object?> get props => [status, workspaceName, workspaceId, officeId];
 }

@@ -1,33 +1,30 @@
 part of 'edit_workspace_bloc.dart';
 
-@immutable
-abstract class EditWorkspaceEvent {
+abstract class EditWorkspaceEvent extends Equatable {
   const EditWorkspaceEvent();
+
+  @override
+  List<Object> get props => [];
 }
 
-class RenameWorkspace extends EditWorkspaceEvent {
-  const RenameWorkspace({required this.name, required this.id});
+class EditWorkspaceSubmitted extends EditWorkspaceEvent {
+  const EditWorkspaceSubmitted({
+    required this.name,
+    this.officeId,
+    this.workspaceId,
+  });
 
   final String name;
-  final String id;
+  final String? officeId;
+  final String? workspaceId;
 }
 
-class CreateWorkspace extends EditWorkspaceEvent {
-  const CreateWorkspace({required this.name, required this.officeId});
+class AddWorkspaceValues extends EditWorkspaceEvent {
+  const AddWorkspaceValues({
+    this.workspaceName,
+    this.workspaceId,
+  });
 
-  final String name;
-  final String officeId;
-}
-
-class GetOffices extends EditWorkspaceEvent {
-
-  const GetOffices();
-}
-
-class SaveWorkspace extends EditWorkspaceEvent {
-
-  const SaveWorkspace({required this.name, required this.id});
-
-  final String name;
-  final String id;
+  final String? workspaceName;
+  final String? workspaceId;
 }

@@ -1,7 +1,7 @@
 part of 'add_timeslot_bloc.dart';
 
 @immutable
-abstract class AddTimeslotEvent {
+abstract class AddTimeslotEvent extends Equatable {
   const AddTimeslotEvent();
 }
 
@@ -12,4 +12,7 @@ class SaveTimeslot extends AddTimeslotEvent {
   final String title;
   final DateTime from;
   final DateTime to;
+
+  @override
+  List<Object?> get props => [title, from, to];
 }

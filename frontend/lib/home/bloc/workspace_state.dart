@@ -1,31 +1,92 @@
 part of 'workspace_bloc.dart';
 
-@immutable
-abstract class WorkspaceState {
-  const WorkspaceState();
-}
+enum WorkspaceStatus { initial, loading, success, failure }
 
-class WorkspaceInitial extends WorkspaceState {
-  const WorkspaceInitial();
-}
+class WorkspaceState extends Equatable {
+  const WorkspaceState({
+    this.status = WorkspaceStatus.initial,
+    this.workspaces = const [],
+    this.lastDeletedWorkspace,
+    this.lastAddedWorkspace,
+  });
 
-class WorkspaceLoading extends WorkspaceState {
-  const WorkspaceLoading();
-}
-
-class WorkspaceLoaded extends WorkspaceState {
-  const WorkspaceLoaded(this.workspaces);
-
+  final WorkspaceStatus status;
   final List<Workspace> workspaces;
+  final Workspace? lastDeletedWorkspace;
+  final Workspace? lastAddedWorkspace;
+
+  WorkspaceState copyWith({
+    WorkspaceStatus Function()? status,
+    List<Workspace> Function()? workspaces,
+    Workspace? Function()? lastDeleted,
+    Workspace? Function()? lastAdded,
+  }) {
+    return WorkspaceState(
+      status: status != null ? status() : this.status,
+      workspaces: workspaces != null ? workspaces() : this.workspaces,
+      lastDeletedWorkspace:
+          lastDeleted != null ? lastDeleted() : lastDeletedWorkspace,
+      lastAddedWorkspace:
+          lastAdded != null ? lastAdded() : lastAddedWorkspace,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        workspaces,
+        status,
+        lastAddedWorkspace,
+        lastDeletedWorkspace,
+      ];
 }
 
-class WorkspaceError extends WorkspaceState {
-  const WorkspaceError(this.error);
-  final String error;
-}
-
-class DeletedWorkspace extends WorkspaceState {
-  const DeletedWorkspace(this.workspace);
-  final Workspace workspace;
-}
-
+// class WorkspaceInitial extends WorkspaceState {
+//   const WorkspaceInitial();
+//
+//   @override
+//   List<Object?> get props => [];
+// }
+//
+// class WorkspaceLoading extends WorkspaceState {
+//   const WorkspaceLoading();
+//
+//   @override
+//   List<Object?> get props => [];
+// }
+//
+// class WorkspaceLoaded extends WorkspaceState {
+//   const WorkspaceLoaded(this.workspaces);
+//
+//   final List<Workspace> workspaces;
+//
+//   @override
+//   List<Object?> get props => [workspaces];
+// }
+//
+// class WorkspaceError extends WorkspaceState {
+//   const WorkspaceError(this.error);
+//   final String error;
+//
+//   @override
+//   List<Object?> get props => [error];
+// }
+//
+// class DeletedWorkspace extends WorkspaceState {
+//   const DeletedWorkspace(this.workspace);
+//   final Workspace workspace;
+//
+//   @override
+//   List<Object?> get props => [workspace];
+// }
+//
+// class SavedWorkspace extends WorkspaceState {
+//
+//   const SavedWorkspace(this.workspace);
+//
+//   final Workspace workspace;
+//
+//   @override
+//   List<Object?> get props => [workspace];
+// }
+//
+//

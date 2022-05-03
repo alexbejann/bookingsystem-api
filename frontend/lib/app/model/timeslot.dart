@@ -7,7 +7,7 @@ import 'package:frontend/app/model/workspace.dart';
 /// from : "2022-04-28T11:00:00.000Z"
 /// workspaceID : {"id":"6268e703a84eee743ad9d477"}
 
-class Timeslot implements Equatable {
+class Timeslot extends Equatable {
   Timeslot({
     required this.id,
     required this.title,
@@ -63,6 +63,4 @@ class Timeslot implements Equatable {
   @override
   List<Object?> get props => [id, title, to, from, workspaceID];
 
-  @override
-  bool? get stringify => throw UnimplementedError();
 }

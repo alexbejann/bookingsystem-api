@@ -8,7 +8,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class OfficeRepository {
   final graphQLService = GraphQLService();
-  String token = '';
 
   Future<List<Office>> getOffices() async {
     final user = await User.getUser();
@@ -18,10 +17,10 @@ class OfficeRepository {
         'organizationId': user.organizationID,
       },
     );
-    assert(result.data != null, 'Never null');
+    print(result.data);
+    assert(result.data != null, 'getOffices null');
     final resultOffice = result.data!['offices'] as List<dynamic>;
     return Office.fromListDynamic(resultOffice);
-    //return token;
   }
 
   Future<Office> addOffice({
@@ -35,22 +34,30 @@ class OfficeRepository {
     );
     assert(result.data != null, 'addOffice null');
     final resultOffice = result.data!['office'] as Map<String, dynamic>;
-    print(resultOffice);
     return Office.fromJson(resultOffice);
   }
 
   Future<Office> renameOffice({
     required Map<String, dynamic> variables,
   }) async {
-    final user = await User.getUser();
-    variables['organizationId'] = user.organizationID;
     QueryResult? result = await graphQLService.performMutation(
       mutations.renameOffice
       variables: variables,
     );
     assert(result.data != null, 'renameOffice null');
     final resultOffice = result.data!['renameOffice'] as Map<String, dynamic>;
-    print(resultOffice);
+    return Office.fromJson(resultOffice);
+  }
+
+  Future<Office> deleteOffice({
+    required Map<String, dynamic> variables,
+  }) async {
+    QueryResult? result = await graphQLService.performMutation(
+      mutations.deleteOffice
+      variables: variables,
+    );
+    assert(result.data != null, 'deleteOffice null');
+    final resultOffice = result.data!['deleteOffice'] as Map<String, dynamic>;
     return Office.fromJson(resultOffice);
   }
 }

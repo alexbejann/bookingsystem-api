@@ -4,14 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend/app/bloc/authentication_bloc.dart';
 import 'package:frontend/app/model/workspace.dart';
-import 'package:frontend/bookings/bookings.dart';
-import 'package:frontend/chat_admin/chat_admin.dart';
 import 'package:frontend/home/bloc/workspace_bloc.dart';
-import 'package:frontend/home/repositories/workspace_repository.dart';
 import 'package:frontend/l10n/l10n.dart';
-import 'package:frontend/new_edit_office/new_edit_office.dart';
-import 'package:frontend/new_edit_workspace/new_edit_workspace.dart';
-import 'package:frontend/timeslots/timeslots.dart';
 import 'package:grouped_list/grouped_list.dart';
 
 class HomePage extends StatelessWidget {
@@ -19,30 +13,18 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => WorkspaceRepository(),
-      child: BlocProvider(
-        create: (context) => WorkspaceBloc(
-          workspaceRepository: context.read<WorkspaceRepository>(),
+    return BlocProvider.value(
+      value: BlocProvider.of<WorkspaceBloc>(context)
+        ..add(
+          const GetWorkspaces(),
         ),
-        child: const HomeView(),
-      ),
+      child: const HomeView(),
     );
   }
 }
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
-
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-
-  void deleteWorkspace() {
-    //todo delete workspace with a popup for confirmation
-  }
 
   Future<void> _optionMenu(BuildContext context) async {
     await showModalBottomSheet<dynamic>(
@@ -81,29 +63,24 @@ class _HomeViewState extends State<HomeView> {
               leading: const Icon(Icons.add),
               title: const Text('Add office'),
               onTap: () =>
-                  context.beamToNamed('/home/newEditOffice?isNew=true'),
+                  context.beamToNamed('/home/newEditOffice?isNew=true&delete=true'),
             ),
             ListTile(
               leading: const Icon(Icons.edit),
               title: const Text('Rename office'),
               onTap: () =>
-                  context.beamToNamed('/home/newEditOffice?isNew=false'),
+                  context.beamToNamed('/home/newEditOffice?isNew=false&delete=true'),
             ),
             ListTile(
               leading: const Icon(Icons.delete_forever),
               title: const Text('Delete office'),
-              onTap: deleteWorkspace,
+              onTap: () =>
+                  context.beamToNamed('/home/newEditOffice?isNew=false&delete=true'),
             ),
           ],
         );
       },
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<WorkspaceBloc>().add(const GetWorkspaces());
   }
 
   @override
@@ -164,21 +141,68 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         title: const Text('Desk Booking'),
       ),
-      body: BlocConsumer<WorkspaceBloc, WorkspaceState>(
-        listener: (context, state) {
-          if (state is WorkspaceError) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.error)));
-          } else if (state is DeletedWorkspace) {
-            context.read<WorkspaceBloc>().add(const GetWorkspaces());
-          }
-        },
-        builder: (context, state) {
-          if (state is WorkspaceLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is WorkspaceLoaded) {
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<WorkspaceBloc, WorkspaceState>(
+            listenWhen: (previous, current) =>
+                previous.status != current.status,
+            listener: (context, state) {
+              if (state.status == WorkspaceStatus.failure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    const SnackBar(
+                      content: Text('Something went wrong!'),
+                    ),
+                  );
+              }
+            },
+          ),
+          BlocListener<WorkspaceBloc, WorkspaceState>(
+            listenWhen: (previous, current) =>
+                previous.lastDeletedWorkspace != current.lastDeletedWorkspace &&
+                current.lastDeletedWorkspace != null,
+            listener: (context, state) {
+              final deletedWorkspace = state.lastDeletedWorkspace!;
+              final messenger = ScaffoldMessenger.of(context);
+              messenger
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      deletedWorkspace.name!,
+                    ),
+                    action: SnackBarAction(
+                      label: 'Undo',
+                      onPressed: () {
+                        messenger.hideCurrentSnackBar();
+                        context
+                            .read<WorkspaceBloc>()
+                            .add(const WorkspaceUndoDeletionRequested());
+                      },
+                    ),
+                  ),
+                );
+            },
+          ),
+        ],
+        child: BlocBuilder<WorkspaceBloc, WorkspaceState>(
+          builder: (context, state) {
+            if (state.workspaces.isEmpty) {
+              if (state.status == WorkspaceStatus.loading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state.status != WorkspaceStatus.success) {
+                return const SizedBox();
+              } else {
+                return Center(
+                  child: Text(
+                    'There are no Workspaces available',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                );
+              }
+            }
+            print(state.workspaces.length);
             return GroupedListView<Workspace, String>(
               elements: state.workspaces,
               groupBy: (element) => element.office!.name,
@@ -198,7 +222,7 @@ class _HomeViewState extends State<HomeView> {
                           onPressed: (BuildContext context) {
                             context
                                 .read<WorkspaceBloc>()
-                                .add(DeleteWorkspace(element.id));
+                                .add(DeleteWorkspace(element));
                           },
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
@@ -227,12 +251,8 @@ class _HomeViewState extends State<HomeView> {
                 );
               },
             );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+          },
+        ),
       ),
     );
   }

@@ -32,6 +32,7 @@ const String deleteOffice = r'''
 mutation Mutation($deleteOfficeId: ID!) {
   deleteOffice(id: $deleteOfficeId) {
     id
+    name
   }
 }
 ''';
@@ -51,6 +52,9 @@ const String removeTimeslot = r'''
 mutation Mutation($timeslotId: ID!) {
   removeTimeslot(timeslotID: $timeslotId) {
     id
+    title
+    to
+    from
   }
 }
 ''';
@@ -60,6 +64,10 @@ mutation Mutation($name: String!, $officeId: ID!) {
   addWorkspace(name: $name, officeID: $officeId) {
     id
     name
+    officeID {
+      id
+      name
+    }
   }
 }
 ''';
@@ -69,6 +77,10 @@ mutation Mutation($newName: String!, $workspaceId: ID!) {
   renameWorkspace(newName: $newName, workspaceID: $workspaceId) {
     id
     name
+    officeID {
+      id
+      name
+    }
   }
 }
 ''';
