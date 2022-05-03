@@ -22,7 +22,8 @@ export default {
             console.log('addWorkspace', parent, args);
             const newWorkspace = new Workspace(args);
             console.log('newWorkspace', newWorkspace);
-            return await newWorkspace.save();
+            const savedWork = await newWorkspace.save();
+            return await Workspace.findOne({_id: savedWork._id}).populate('officeID');
         },
         renameWorkspace: async (parent, args, {user}) => {
             checkPermission(user, true);
@@ -34,7 +35,7 @@ export default {
                     },
                     {
                         new: true,
-                    });
+                    }).populate('officeID');
         },
         deleteWorkspace: async (parent, args, {user}) => {
             checkPermission(user, true);

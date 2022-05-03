@@ -98,3 +98,9 @@ typings/
 
 #DynamoDB Local files
 .dynamodb/
+
+#SSL
+ssl-cert.pem
+ssl-key.pem
+ss-csr.csr
+cer

@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/8dc8c236-5baa-4063-a40e-2732ff6850d3/resourceGroups/deskbooking-resource-group/providers/Microsoft.Web/sites/deskbookingsystem-api",
+    "appService.deploySubpath": "api"
+}
