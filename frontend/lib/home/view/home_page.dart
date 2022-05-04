@@ -62,20 +62,20 @@ class HomeView extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.add),
               title: const Text('Add office'),
-              onTap: () =>
-                  context.beamToNamed('/home/newEditOffice?isNew=true&delete=true'),
+              onTap: () => context
+                  .beamToNamed('/home/newEditOffice?isNew=true&delete=true'),
             ),
             ListTile(
               leading: const Icon(Icons.edit),
               title: const Text('Rename office'),
-              onTap: () =>
-                  context.beamToNamed('/home/newEditOffice?isNew=false&delete=true'),
+              onTap: () => context
+                  .beamToNamed('/home/newEditOffice?isNew=false&delete=true'),
             ),
             ListTile(
               leading: const Icon(Icons.delete_forever),
               title: const Text('Delete office'),
-              onTap: () =>
-                  context.beamToNamed('/home/newEditOffice?isNew=false&delete=true'),
+              onTap: () => context
+                  .beamToNamed('/home/newEditOffice?isNew=false&delete=true'),
             ),
           ],
         );
@@ -96,8 +96,7 @@ class HomeView extends StatelessWidget {
             visible: state.user.admin,
             child: FloatingActionButton(
               backgroundColor: Theme.of(context).bottomAppBarColor,
-              onPressed: () =>
-                  context.beamToNamed('/home/newEditWorkspace'),
+              onPressed: () => context.beamToNamed('/home/newEditWorkspace'),
               child: const Icon(
                 Icons.add,
               ),
@@ -214,6 +213,8 @@ class HomeView extends StatelessWidget {
               itemBuilder: (context, element) {
                 return Card(
                   child: Slidable(
+                    enabled:
+                        context.read<AuthenticationBloc>().state.user.admin,
                     endActionPane: ActionPane(
                       motion: const ScrollMotion(),
                       children: [
