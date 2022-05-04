@@ -38,26 +38,6 @@ class DeleteWorkspace extends WorkspaceEvent {
   List<Object?> get props => [workspace];
 }
 
-class RenameWorkspace extends WorkspaceEvent {
-  const RenameWorkspace({required this.name, required this.id});
-
-  final String name;
-  final String id;
-
-  @override
-  List<Object?> get props => [id, name];
-}
-
-class CreateWorkspace extends WorkspaceEvent {
-  const CreateWorkspace({required this.name, required this.officeId});
-
-  final String name;
-  final String officeId;
-
-  @override
-  List<Object?> get props => [name, officeId];
-}
-
 class RecentlyEditedWorkspace extends WorkspaceEvent {
   const RecentlyEditedWorkspace(this.workspace);
 

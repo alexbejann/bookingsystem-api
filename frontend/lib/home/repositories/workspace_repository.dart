@@ -9,7 +9,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class WorkspaceRepository {
   final graphQLService = GraphQLService();
-  String token = '';
 
   Future<List<Workspace>> getWorkspaces() async {
     final user = await User.getUser();
@@ -62,7 +61,6 @@ class WorkspaceRepository {
       mutations.deleteWorkspace,
       variables: <String, dynamic>{'deleteWorkspaceId': workspaceId},
     );
-    print(result.data);
     assert(result.data != null, 'deleteWorkspace null');
     final resultWorkspaces =
     result.data!['deleteWorkspace'] as Map<String, dynamic>;

@@ -17,7 +17,6 @@ class OfficeRepository {
         'organizationId': user.organizationID,
       },
     );
-    print(result.data);
     assert(result.data != null, 'getOffices null');
     final resultOffice = result.data!['offices'] as List<dynamic>;
     return Office.fromListDynamic(resultOffice);

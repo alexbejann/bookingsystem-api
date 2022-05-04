@@ -202,7 +202,6 @@ class HomeView extends StatelessWidget {
                 );
               }
             }
-            print(state.workspaces.length);
             return GroupedListView<Workspace, String>(
               elements: state.workspaces,
               groupBy: (element) => element.office!.name,

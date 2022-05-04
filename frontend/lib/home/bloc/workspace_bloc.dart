@@ -20,10 +20,6 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
   }) : super(const WorkspaceState()) {
     on<GetWorkspaces>(_onSubscriptionRequested);
 
-    on<RenameWorkspace>(_onRenameRequested);
-
-    on<CreateWorkspace>(_onCreateWorkspace);
-
     on<WorkspaceUndoDeletionRequested>(_onUndoDeletionRequested);
 
     on<DeleteWorkspace>(_onWorkspaceDeleted);
@@ -53,51 +49,6 @@ class WorkspaceBloc extends Bloc<WorkspaceEvent, WorkspaceState> {
           status: () => WorkspaceStatus.failure,
         ),
       );
-    }
-  }
-
-  Future<void> _onCreateWorkspace(
-    CreateWorkspace event,
-    Emitter<WorkspaceState> emit,
-  ) async {
-    emit(state.copyWith(status: () => WorkspaceStatus.loading));
-
-    try {
-      final savedWorkspace = await workspaceRepository.createWorkspace(
-        workspaceName: event.name,
-        officeId: event.officeId,
-      );
-      emit(
-        state.copyWith(
-          status: () => WorkspaceStatus.success,
-          workspaces: () => [...state.workspaces, savedWorkspace],
-        ),
-      );
-    } catch (e) {
-      emit(state.copyWith(status: () => WorkspaceStatus.failure));
-    }
-  }
-
-  Future<void> _onRenameRequested(
-    RenameWorkspace event,
-    Emitter<WorkspaceState> emit,
-  ) async {
-    emit(state.copyWith(status: () => WorkspaceStatus.loading));
-
-    try {
-      final renamedWorkspace = await workspaceRepository.renameWorkspace(
-        workspaceName: event.name,
-        workspaceId: event.id,
-      );
-
-      // emit(
-      //   state.copyWith(
-      //     status: () => WorkspaceStatus.success,
-      //     workspaces: () => [...state.workspaces].w,
-      //   ),
-      // );
-    } catch (e) {
-      emit(state.copyWith(status: () => WorkspaceStatus.failure));
     }
   }
 

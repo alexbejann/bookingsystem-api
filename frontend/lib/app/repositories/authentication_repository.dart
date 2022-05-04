@@ -15,30 +15,6 @@ class AuthenticationRepository {
   Stream<AuthenticationStatus> get status async* {
     final pref = await SharedPreferences.getInstance();
     if (pref.containsKey('userAccount')) {
-      // if (JwtDecoder.isExpired(this.token)) {
-      //   this.deleteToken();
-      //   yield AuthenticationStatus.unauthenticated;
-      //   yield* _controller.stream;
-      // } else {
-      //   var exp = JwtDecoder.getExpirationDate(this.token);
-      //   var now = DateTime.now();
-      //   print('Preview Dates:  exp = $exp  now = $now');
-      //   Duration difference = exp.difference(now);
-      //   print('Difference now with exp is ${difference.inMinutes} minutes');
-      //   print('Set timer to ${difference.inMinutes - 5} for tocken refresh');
-      //   Timer.periodic(Duration(minutes: difference.inMinutes - 5), (timer) {
-      //     final nowDT = DateTime.now();
-      //     print('''
-      //       +-------------------------------------------------------------------
-      //       | Preview token expiration before refresh:
-      //       +-------------------------------------------------------------------
-      //       | [-] current datetime: $nowDT
-      //       | [-] token expired at: $exp
-      //       | [-] token: ${this.token}
-      //       +-------------------------------------------------------------------
-      //     ''');
-      //     this.refreshToken();
-      //   });
       yield AuthenticationStatus.authenticated;
       yield* _controller.stream;
     } else {
