@@ -5,15 +5,14 @@ import {checkPermission} from "../utils/auth";
 export default {
     Query: {
         organizations: async (parent, args, {user}) => {
-            checkPermission(user, false);
+            await checkPermission(user, 'ROOT');
             return Organization.find();
         },
     },
     Mutation: {
         addOrganization: async (parent, args, {user}) => {
             try {
-                /// todo allow this action only for the root role
-                checkPermission(user,true);
+                await checkPermission(user,'ROOT');
                 console.log(parent, args);
                 const newOrg = new Organization(args);
                 console.log(newOrg);

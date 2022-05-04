@@ -4,6 +4,7 @@ import organizationSchema from './organizationSchema';
 import officeSchema from "./officeSchema";
 import workspaceSchema from "./workspaceSchema";
 import timeslotSchema from "./timeslotSchema";
+import roleSchema from "./roleSchema";
 
 const linkSchema = gql`
   type Query {
@@ -20,5 +21,6 @@ export default [
     organizationSchema,
     officeSchema,
     workspaceSchema,
-    timeslotSchema
+    timeslotSchema,
+    roleSchema,
 ];

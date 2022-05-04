@@ -5,12 +5,12 @@ import {checkPermission} from "../utils/auth";
 export default {
     Query: {
         userBookings: async (parent, args, {user}) => {
-            checkPermission(user, false);
+            await checkPermission(user, 'ORGANIZATION_ADMIN');
             console.log('userBookings', parent, args);
             return await Timeslot.find().populate('userID workspaceID').where({userID: args.userID});
         },
         workspaceTimeslots: async (parent, args, {user}) => {
-            checkPermission(user, false);
+            await checkPermission(user, 'ORGANIZATION_ADMIN');
             console.log('workspaceTimeslots', parent, args);
             return await Timeslot.find().populate('workspaceID').where({workspaceID: args.workspaceID});
         },
@@ -18,7 +18,7 @@ export default {
     },
     Mutation: {
         addTimeslot: async (parent, args, {user}) => {
-            checkPermission(user, false)
+            await checkPermission(user);
             console.log('addTimeslots', parent, args);
             const existingTimeslot = await Timeslot.findOne({from: args.from, workspaceID: args.workspaceID})
             console.log('existing ',existingTimeslot);
@@ -30,7 +30,7 @@ export default {
             return await newTimeslot.save();
         },
         removeTimeslot: async (parent, args, {user}) => {
-            checkPermission(user, false)
+            await checkPermission(user);
             console.log('removeTimeslot', parent, args);
             return await Timeslot.findOneAndDelete({_id: args.timeslotID});
         }

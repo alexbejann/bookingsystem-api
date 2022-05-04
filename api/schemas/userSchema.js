@@ -13,19 +13,24 @@ export default gql`
     registerUser(
       username: String!,
       password: String!,
-      admin: Boolean,
+      role: ID
       organizationID: ID!
     ): User
     changePassword(
       userID: ID!,
       password: String!,
     ): User
+    changeUserRole(
+      userID: ID!,
+      roleID: ID!,
+    ): User
   }
   
   type User {
     id: ID
-    username: String,
+    username: String
     admin: Boolean
+    role: ID
     token: String
     organizationID: ID
   }

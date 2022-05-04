@@ -3,6 +3,7 @@ import organizationResolver from './organizationResolver';
 import officeResolver from "./officeResolver";
 import workspaceResolver from "./workspaceResolver";
 import timeslotResolver from "./timeslotResolver";
+import roleResolver from "./roleResolver";
 
 export default [
     userResolver,
@@ -10,4 +11,5 @@ export default [
     officeResolver,
     workspaceResolver,
     timeslotResolver,
+    roleResolver,
 ];
