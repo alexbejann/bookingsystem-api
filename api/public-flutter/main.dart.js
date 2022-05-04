@@ -80756,7 +80756,7 @@ if(!s&&m!=null){p="addTimeslots-"+A.e(n)
 i.push(A.a51(new A.Lc(A.B1(n),A.B1(n).C(0,B.bD),m,l),!0,new A.cK(p,t.o)))}if(m!=null&&s)i.push(A.a51(new A.Vi(m,l),!1,new A.cK("timeslots-"+A.e(m),t.o)))
 return i}}
 A.aa6.prototype={
-a38(){var s,r,q,p,o,n,m,l=null,k=new A.OC(A.jj("http://localhost:3000/graphql/"))
+a38(){var s,r,q,p,o,n,m,l=null,k=new A.OC(A.jj("https://deskbookingsystem-api.azurewebsites.net/graphql/"))
 k.r=new A.a5x(A.b5(t.Gf))
 s=A.a([new A.Lz(A.aSf("Authorization",new A.aa7())),k],t.hV)
 r=A.aTZ()
