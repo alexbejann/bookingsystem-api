@@ -107,7 +107,7 @@ class _NewEditOfficeViewState extends State<NewEditOfficeView> {
             ),
             const Divider(),
             Visibility(
-              visible: widget.deleteOffice == false,
+              visible: widget.deleteOffice != false,
               child: ListTile(
                 title: TextField(
                   controller: officeIdController,
@@ -121,7 +121,7 @@ class _NewEditOfficeViewState extends State<NewEditOfficeView> {
             const Divider(),
             Visibility(
               visible:
-                  widget.isNewOffice == false || widget.deleteOffice == false,
+                  widget.isNewOffice == false || widget.deleteOffice == true,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: BlocBuilder<OfficeBloc, OfficeState>(
