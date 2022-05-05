@@ -1,5 +1,7 @@
 # BookingSystem
 
+___NOTE: The frontend is built using Flutter web and it is not behaving as expected, for instance if you resfresh the page using the refresh button it will reset the whole state of the application___
+
 ## Description 
 
 
@@ -56,13 +58,39 @@ password: admin123
 ```
 offices(organizationID : ID!) : [Office]
 ```
-#### Example 
+### Usage 
+#### Params 
+```
+{
+  "organizationId": "625689f1bc5bb6b2cdd790cf"
+}
+```
+```
+query Offices($organizationId: ID!) {
+  offices(organizationID: $organizationId) {
+    id
+    name
+    organizationID {
+      id
+      name
+    }
+  }
+}
+```
 
 #### Organizations
 ```
 organizations: [Organization]
 ```
-#### Example 
+#### Usage 
+```
+query Organizations {
+  organizations {
+    id
+    name
+  }
+}
+```
 
 #### Timeslot
 
@@ -99,10 +127,23 @@ workspaces(officeID : ID!): [Workspace]
 ```
 workspacesByOrg(organizationID : ID!): [Workspace]
 ```
-#### Example 
-##### All Workspaces by Office Id
+### Params 
 ```
-
+{
+  "organizationId": "625689f1bc5bb6b2cdd790cf"
+}
+```
+```
+query Query($organizationId: ID!) {
+  workspacesByOrg(organizationID: $organizationId) {
+    id
+    name
+    officeID {
+      name
+      id
+    }
+  }
+}
 ```
 ##### Workspaces by Organization Id
 ```
@@ -156,6 +197,27 @@ addTimeslot(
     workspaceID: ID!
     ): Timeslot
 ```
+### Param
+```
+{
+  "title": "Alex",
+  "from": "2022-04-28 11:00:00.000",
+  "to": "2022-04-28 12:00:00.000",
+  "userId": "625695c73281f7dbb1da4696",
+  "workspaceId": "6268e703a84eee743ad9d477"
+}
+```
+
+```
+mutation Mutation($title: String!, $from: String!, $to: String!, $userId: ID!, $workspaceId: ID!) {
+  addTimeslot(title: $title, from: $from, to: $to, userID: $userId, workspaceID: $workspaceId) {
+    id
+    title
+    from
+    to
+  }
+}
+```
 ##### Remove/Delete
 ```
 removeTimeslot(timeslotID: ID!): Timeslot
@@ -169,6 +231,25 @@ login(
     username: String!, 
     password: String!
     ): User
+```
+#### Param
+```
+{  "username": "alex",
+  "password": "admin123"
+}
+```
+
+```
+mutation Mutation($username: String!, $password: String!) {
+  login(username: $username, password: $password) {
+    id
+    username
+    admin
+    role
+    token
+    organizationID
+  }
+}
 ```
 ##### Registratio of a User
 ___Note: This action is done by the ORGANIZATION_ADMIN role, users are not allowed to do this on their own___
@@ -195,6 +276,25 @@ changeUserRole(
       roleID: ID!,
     ): User
 ```
+#### Param 
+```
+{
+  "userId": "625695c73281f7dbb1da4696",
+  "roleId": "62726a1a8ede358b3664025c"
+}
+```
+
+```
+mutation Mutation($userId: ID!, $roleId: ID!) {
+  changeUserRole(userID: $userId, roleID: $roleId) {
+    id
+    username
+    admin
+    token
+    organizationID
+  }
+}
+```
 
 #### Workspace
 ##### Add
@@ -205,6 +305,27 @@ addWorkspace(name: String!, officeID : ID!): Workspace
 ```
 renameWorkspace(newName: String!, workspaceID: ID!): Workspace
 ```
+#### Params
+```
+{
+  "newName": "populated test 2",
+  "workspaceId": "626feb9f15be1c95f081d11c",
+}
+```
+
+```
+mutation Mutation($newName: String!, $workspaceId: ID!) {
+  renameWorkspace(newName: $newName, workspaceID: $workspaceId) {
+    id
+    name
+    officeID {
+      id
+      name
+    }
+  }
+}
+```
+
 ##### Delete
 ```
 deleteWorkspace(id: ID!): Workspace
