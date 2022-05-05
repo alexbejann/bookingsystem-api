@@ -13,7 +13,7 @@ export default {
     },
     Mutation: {
         addOffice: async (parent, args, {user}) => {
-            checkPermission(user, 'ORGANIZATION_ADMIN');
+            await checkPermission(user, 'ORGANIZATION_ADMIN');
             console.log('addOffice', parent, args);
             const newOffice = new Office(args);
             console.log('newOffice', newOffice);
