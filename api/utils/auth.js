@@ -44,6 +44,10 @@ const checkPermission = async (user, requestedRole) => {
         return true;
     }
     const role = await Role.findOne({_id: user.role});
+
+    if (role.name === 'ROOT') {
+        return true;
+    }
     if (role.name !== requestedRole) {
         throw new AuthenticationError('You do not have permission for this action!')
     }
