@@ -107,35 +107,103 @@ query Organizations {
 ```
 
 #### Timeslot
-
 ##### User's Bookings
 ```
 userBookings(userID: ID!): [Timeslot]
 ```
+#### Usage
+```
+{
+  userId: "625695c73281f7dbb1da4696"
+}
+```
+
+```
+query Query($userId: ID!) {
+  userBookings(userID: $userId) {
+    id
+    title
+    from
+    to
+    workspaceID {
+      id
+      name
+    }
+  }
+}
+```
+
 ##### Timeslots/Bookings for a workspace
 ```
 workspaceTimeslots(workspaceID: ID!): [Timeslot]
 ```
-#### Example 
+#### Usage
+```
+{
+workspaceID: "626efd1dfb02c9e023869983"
+}
+```
 
-##### User's Bookings
 ```
-```
-##### Timeslots/Bookings for a workspace
-```
+query Query($workspaceId: ID!) {
+  workspaceTimeslots(workspaceID: $workspaceId) {
+    id
+    title
+    to
+    from
+    workspaceID {
+      id
+      name
+    }
+  }
+}
 ```
 #### User
 ```
 user(id: ID!): User
 ```
-#### Example 
+#### Param
 ```
+{
+  userId: "625695c73281f7dbb1da4696"
+}
+```
+
+```
+query Query($userId: ID!) {
+  user(id: $userId) {
+    id
+    admin
+    username
+    token
+    organizationID
+  }
+}
 ```
 
 #### Workspace
 ##### All Workspaces by Office Id
 ```
 workspaces(officeID : ID!): [Workspace]
+```
+##### Param
+```
+{
+  officeId: "626efd1dfb02c9e023869983"
+}
+```
+
+```
+query Query($officeId: ID!) {
+  workspaces(officeID: $officeId) {
+    id
+    name
+    officeID {
+      id
+      name
+    }
+  }
+}
 ```
 ##### Workspaces by Organization Id
 ```
@@ -159,10 +227,6 @@ query Query($organizationId: ID!) {
   }
 }
 ```
-##### Workspaces by Organization Id
-```
-
-```
 
 ### Mutations: 
 
@@ -172,21 +236,81 @@ query Query($organizationId: ID!) {
 ```
 addOffice(name: String!, organizationID: ID!): Office
 ```
+##### Param
+```
+{
+  name: "Test Office",
+  organizationID: "625689f1bc5bb6b2cdd790cf",
+}
+```
+
+```
+mutation Mutation($name: String!, $organizationId: ID!) {
+  addOffice(name: $name, organizationID: $organizationId) {
+    id
+    name
+  }
+}
+```
 ##### Rename 
 ```
 renameOffice(newName: String!, officeID: ID!) : Office
+```
+#### Param
+```
+{
+  newName: "Test office rename",
+  officeId: "6264fd8f4b0c40d7b19a6d7c"
+}
+```
+
+```
+mutation Mutation($newName: String!, $officeId: ID!) {
+  renameOffice(newName: $newName, officeID: $officeId) {
+    id
+    name
+  }
+}
 ```
 #### Delete by id
 ```
 deleteOffice(id: ID!) : Office
 ```
+#### Param
+```
+{
+  deleteOfficeId: "6264fd2d4b0c40d7b19a6d79"
+}
+```
 
-
+```
+mutation Mutation($deleteOfficeId: ID!) {
+  deleteOffice(id: $deleteOfficeId) {
+    id
+    name
+  }
+}
+```
 #### Organization
 
 ___Note: Organization supports only creation at the moment which is perfomed by the company owning the software___
 ```
 addOrganization(name: String!): Organization
+```
+#### Param 
+```
+{
+  name: "New organization"
+}
+```
+
+```
+mutation Mutation($name: String!) {
+  addOrganization(name: $name) {
+    id
+    name
+  }
+}
 ```
 #### Role
 
@@ -194,11 +318,40 @@ addOrganization(name: String!): Organization
 ```
 addRole(roleName: String!) : Role
 ```
+##### Param
+```
+{
+  name: "ORG_ROOT"
+}
+```
+
+```
+
+mutation Mutation($name: String!) {
+  addRole(name: $name) {
+    id
+    name
+  }
+}
+```
 ##### Delete
 ```
 deleteRole(roleID: ID!) : Role
 ```
+##### Param
+```
+{
+  "roleId": "62726ac68ede358b36640260"
+}
+```
 
+```
+mutation Mutation($roleId: ID!) {
+  deleteRole(roleID: $roleId) {
+    id
+  }
+}
+```
 #### Timeslot
 
 ##### Add
@@ -236,7 +389,20 @@ mutation Mutation($title: String!, $from: String!, $to: String!, $userId: ID!, $
 ```
 removeTimeslot(timeslotID: ID!): Timeslot
 ```
+#### Param
+```
+{
+  "timeslotId": "62700956b0a78036cab73daf"
+}
+```
 
+```
+mutation Mutation($timeslotId: ID!) {
+  removeTimeslot(timeslotID: $timeslotId) {
+    id
+  }
+}
+```
 #### User
 
 ##### Login
@@ -275,12 +441,46 @@ registerUser(
       organizationID: ID!
     ): User
 ```
+#### Param 
+```
+{
+  "username": "test2",
+  "password": "test321",
+  "organizationId: "625689f1bc5bb6b2cdd790cf",
+  "role": "62726ac68ede358b36640260"
+}
+```
+
+```
+mutation Mutation($username: String!, $password: String!, $organizationId: ID!, $role: ID) {
+  registerUser(username: $username, password: $password, organizationID: $organizationId, role: $role) {
+    id
+    username
+  }
+}
+```
 #### Password change
 ```
 changePassword(
       userID: ID!,
       password: String!,
     ): User
+```
+#### Param
+```
+{
+  "user": "625695c73281f7dbb1da4696",
+  "password" : "newpass123"
+}
+```
+
+```
+mutation Mutation($userId: ID!, $password: String!) {
+  changePassword(userID: $userId, password: $password) {
+    id
+    username
+  }
+}
 ```
 #### Change role
 ___Note: Action by Organization Admin___
@@ -315,6 +515,22 @@ mutation Mutation($userId: ID!, $roleId: ID!) {
 ```
 addWorkspace(name: String!, officeID : ID!): Workspace
 ```
+#### Param
+```
+{
+  "name": "New workspace faced to window",
+  "officeId": "6264fcf44b0c40d7b19a6d77"
+}
+```
+
+```
+mutation Mutation($name: String!, $officeId: ID!) {
+  addWorkspace(name: $name, officeID: $officeId) {
+    id
+    name
+  }
+}
+```
 ##### Rename
 ```
 renameWorkspace(newName: String!, workspaceID: ID!): Workspace
@@ -344,7 +560,21 @@ mutation Mutation($newName: String!, $workspaceId: ID!) {
 ```
 deleteWorkspace(id: ID!): Workspace
 ```
+##### Param
+```
+{
+  "deleteOfficeId": "626efe175af150847c1849a8"
+}
+```
 
+```
+mutation Mutation($deleteOfficeId: ID!) {
+  deleteOffice(id: $deleteOfficeId) {
+    id
+    name
+  }
+}
+```
 ### Schema Types
 
 ```
