@@ -19,6 +19,20 @@ The user is able to select the dates that he wants to book a desk/room for.
 
 The administrator/project manager is able to see his team when each one of them are in the office, on-site (based on booking dates).
 
+The administrator is able to do CRUD operations on the Offices and Workspaces. 
+
+The ROOT can add organizations and delete them as wel. 
+
+The ROOT can assign roles to each user outside of an organization. 
+
+The administrator is able to assign roles only to his organization users. 
+
+The system is multi-tenant supporting multiple roles and organizations. 
+
+The system displayes only the ___not passed___ dates/bookings. 
+
+The user can change only his own password. 
+
 ### Platform users 
 The platform is meant for employees of a company that are seeking to book their office time and the office/station that they are going to use during that day at the office.
 The platform can be used also for tenants of a building to book the laundry or anything else that can be booked. 
