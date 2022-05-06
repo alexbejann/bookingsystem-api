@@ -1,6 +1,6 @@
 # BookingSystem
 
-___NOTE: The frontend is built using Flutter web and it is not behaving as expected, for instance if you resfresh the page using the refresh button it will reset the whole state of the application___
+___NOTE: The frontend is built using Flutter web and it is not behaving as expected, for instance if you resfresh the page using the refresh button it will reset the whole state of the application. Furthermore, if the application suddenly stopps or is not navigating somewhere, just correct the url that is an issue that flutter is strugguling with___
 
 ## Description 
 
