@@ -50,14 +50,17 @@ class BeamerLocations extends BeamLocation<BeamState> {
     ];
     final newEditOfficeQuery = state.queryParameters['isNew'];
     final deleteOfficeQuery = state.queryParameters['delete'];
+    final isEditOfficeQuery = state.queryParameters['isEdit'];
     if (state.uri.pathSegments.contains('newEditOffice') &&
-        newEditOfficeQuery != null && deleteOfficeQuery != null) {
+        newEditOfficeQuery != null && deleteOfficeQuery != null
+        && isEditOfficeQuery != null) {
       pages.add(
         BeamPage(
           key: ValueKey('newEditOffice-$newEditOfficeQuery'),
           child: NewEditOfficePage(
             isNewOffice: newEditOfficeQuery.toLowerCase() == 'true',
             deleteOffice: deleteOfficeQuery.toLowerCase() == 'true',
+            isEditOffice: isEditOfficeQuery.toLowerCase() == 'true',
           ),
         ),
       );

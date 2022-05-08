@@ -9,9 +9,11 @@ class NewEditOfficePage extends StatelessWidget {
     Key? key,
     this.isNewOffice = false,
     this.deleteOffice = false,
+    this.isEditOffice = false,
   }) : super(key: key);
   final bool isNewOffice;
   final bool deleteOffice;
+  final bool isEditOffice;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class NewEditOfficePage extends StatelessWidget {
       child: NewEditOfficeView(
         isNewOffice: isNewOffice,
         deleteOffice: deleteOffice,
+        isEditOffice: isEditOffice,
       ),
     );
   }
@@ -32,9 +35,11 @@ class NewEditOfficeView extends StatefulWidget {
     Key? key,
     this.isNewOffice = false,
     this.deleteOffice = false,
+    this.isEditOffice = false,
   }) : super(key: key);
   final bool isNewOffice;
   final bool deleteOffice;
+  final bool isEditOffice;
 
   @override
   State<NewEditOfficeView> createState() => _NewEditOfficeViewState();
@@ -59,20 +64,21 @@ class _NewEditOfficeViewState extends State<NewEditOfficeView> {
                 officeId: officeId!,
               ),
             );
-        return;
+      } else if (widget.isEditOffice) {
+        context.read<OfficeBloc>().add(
+              RenameOffice(
+                name: officeIdController.text,
+                officeId: officeId!,
+              ),
+            );
+      } else {
+        context.read<OfficeBloc>().add(
+              AddOffice(
+                name: officeIdController.text,
+              ),
+            );
       }
-      widget.isNewOffice
-          ? context.read<OfficeBloc>().add(
-                AddOffice(
-                  name: officeIdController.text,
-                ),
-              )
-          : context.read<OfficeBloc>().add(
-                RenameOffice(
-                  name: officeIdController.text,
-                  officeId: '',
-                ),
-              );
+      return;
     }
   }
 
@@ -107,7 +113,7 @@ class _NewEditOfficeViewState extends State<NewEditOfficeView> {
             ),
             const Divider(),
             Visibility(
-              visible: widget.deleteOffice != false,
+              visible: widget.isNewOffice || widget.isEditOffice,
               child: ListTile(
                 title: TextField(
                   controller: officeIdController,
@@ -120,8 +126,9 @@ class _NewEditOfficeViewState extends State<NewEditOfficeView> {
             ),
             const Divider(),
             Visibility(
-              visible:
-                  widget.isNewOffice == false || widget.deleteOffice == true,
+              visible: widget.isNewOffice ||
+                  widget.isEditOffice ||
+                  widget.deleteOffice,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: BlocBuilder<OfficeBloc, OfficeState>(

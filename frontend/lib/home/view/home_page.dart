@@ -63,19 +63,19 @@ class HomeView extends StatelessWidget {
               leading: const Icon(Icons.add),
               title: const Text('Add office'),
               onTap: () => context
-                  .beamToNamed('/home/newEditOffice?isNew=true&delete=true'),
+                  .beamToNamed('/home/newEditOffice?isNew=true&delete=false&isEdit=false'),
             ),
             ListTile(
               leading: const Icon(Icons.edit),
               title: const Text('Rename office'),
               onTap: () => context
-                  .beamToNamed('/home/newEditOffice?isNew=false&delete=true'),
+                  .beamToNamed('/home/newEditOffice?isNew=false&delete=false&isEdit=true'),
             ),
             ListTile(
               leading: const Icon(Icons.delete_forever),
               title: const Text('Delete office'),
               onTap: () => context
-                  .beamToNamed('/home/newEditOffice?isNew=false&delete=true'),
+                  .beamToNamed('/home/newEditOffice?isNew=false&delete=true&isEdit=false'),
             ),
           ],
         );
