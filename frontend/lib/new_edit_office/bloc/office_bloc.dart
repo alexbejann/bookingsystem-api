@@ -95,7 +95,7 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
     try {
       final office = await officeRepository.deleteOffice(
         variables: <String, dynamic>{
-          'officeId': event.officeId,
+          'deleteOfficeId': event.officeId,
         },
       );
       emit(
