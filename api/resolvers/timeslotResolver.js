@@ -5,12 +5,12 @@ import {checkPermission} from "../utils/auth";
 export default {
     Query: {
         userBookings: async (parent, args, {user}) => {
-            await checkPermission(user, 'ORGANIZATION_ADMIN');
+            await checkPermission(user);
             console.log('userBookings', parent, args);
             return await Timeslot.find().populate('userID workspaceID').where({userID: args.userID});
         },
         workspaceTimeslots: async (parent, args, {user}) => {
-            await checkPermission(user, 'ORGANIZATION_ADMIN');
+            await checkPermission(user);
             console.log('workspaceTimeslots', parent, args);
             return await Timeslot.find().populate('workspaceID').where({workspaceID: args.workspaceID});
         },
