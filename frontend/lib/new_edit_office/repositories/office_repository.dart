@@ -32,7 +32,7 @@ class OfficeRepository {
       variables: variables,
     );
     assert(result.data != null, 'addOffice null');
-    final resultOffice = result.data!['office'] as Map<String, dynamic>;
+    final resultOffice = result.data!['addOffice'] as Map<String, dynamic>;
     return Office.fromJson(resultOffice);
   }
 

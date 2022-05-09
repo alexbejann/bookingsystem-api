@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:frontend/app/model/office.dart';
 import 'package:frontend/new_edit_office/repositories/office_repository.dart';
+import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
 
 part 'office_event.dart';
@@ -20,6 +21,8 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
 
   final OfficeRepository officeRepository;
 
+  final logger = Logger();
+
   Future<void> _onOfficesRequested(
     GetOffices event,
     Emitter<OfficeState> emit,
@@ -35,6 +38,7 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
         ),
       );
     } catch (e) {
+      logger.e(e);
       emit(state.copyWith(status: () => OfficeStatus.failure));
     }
   }
@@ -58,6 +62,7 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
         ),
       );
     } catch (e) {
+      logger.e(e);
       emit(state.copyWith(status: () => OfficeStatus.failure));
     }
   }
@@ -82,6 +87,7 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
         ),
       );
     } catch (e) {
+      logger.e(e);
       emit(state.copyWith(status: () => OfficeStatus.failure));
     }
   }
@@ -102,10 +108,11 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
         state.copyWith(
           status: () => OfficeStatus.editSuccess,
           offices: () => [...state.offices]
-            ..removeWhere((element) => element.id == office.id),
+            ..removeWhere((element) => element.id == event.officeId),
         ),
       );
     } catch (e) {
+      logger.e(e);
       emit(state.copyWith(status: () => OfficeStatus.failure));
     }
   }

@@ -102,72 +102,84 @@ class _NewEditOfficeViewState extends State<NewEditOfficeView> {
   Widget build(BuildContext context) {
     final focusNode = FocusNode()..requestFocus();
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          children: [
-            ListTile(
-              leading: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.close),
-              ),
-              title: Text(
-                widget.isNewOffice ? 'Create new office' : 'Edit office',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              trailing: TextButton(
-                onPressed: () => saveForm(context),
-                child: const Text('Done'),
-              ),
-            ),
-            const Divider(),
-            Visibility(
-              visible: widget.isNewOffice || widget.isEditOffice,
-              child: ListTile(
-                title: TextField(
-                  controller: officeIdController,
-                  focusNode: focusNode,
-                  decoration:
-                      const InputDecoration(labelText: 'Enter office name'),
-                  style: Theme.of(context).textTheme.bodyMedium,
+      body: BlocListener<OfficeBloc, OfficeState>(
+        listener: (context, state) {
+          if (state.status == OfficeStatus.failure) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(
+                  content: Text('Something went wrong!'),
+                ),
+              );
+          }
+        },
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              ListTile(
+                leading: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+                title: Text(
+                  widget.isNewOffice ? 'Create new office' : 'Edit office',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                trailing: TextButton(
+                  onPressed: () => saveForm(context),
+                  child: const Text('Done'),
                 ),
               ),
-            ),
-            const Divider(),
-            Visibility(
-              visible: widget.isEditOffice ||
-                  widget.deleteOffice,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: BlocBuilder<OfficeBloc, OfficeState>(
-                  builder: (context, state) {
-                    if (state.offices.isNotEmpty) {
-                      return DropdownButtonFormField<String>(
-                        validator: (value) =>
-                            value == null ? 'Field required' : null,
-                        hint: const Text('Please choose an office'),
-                        items: state.offices.map((Office office) {
-                          return DropdownMenuItem<String>(
-                            value: office.id,
-                            child: Text(office.name),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            officeId = value;
-                          });
-                        },
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
+              const Divider(),
+              Visibility(
+                visible: widget.isNewOffice || widget.isEditOffice,
+                child: ListTile(
+                  title: TextField(
+                    controller: officeIdController,
+                    focusNode: focusNode,
+                    decoration:
+                        const InputDecoration(labelText: 'Enter office name'),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ),
-            ),
-          ],
+              const Divider(),
+              Visibility(
+                visible: widget.isEditOffice || widget.deleteOffice,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: BlocBuilder<OfficeBloc, OfficeState>(
+                    builder: (context, state) {
+                      if (state.offices.isNotEmpty) {
+                        return DropdownButtonFormField<String>(
+                          validator: (value) =>
+                              value == null ? 'Field required' : null,
+                          hint: const Text('Please choose an office'),
+                          items: state.offices.map((Office office) {
+                            return DropdownMenuItem<String>(
+                              value: office.id,
+                              child: Text(office.name),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              officeId = value;
+                            });
+                          },
+                        );
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
