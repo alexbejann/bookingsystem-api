@@ -1,6 +1,7 @@
 import 'package:frontend/utils/graphql/mutations.dart' as mutations;
 import 'package:frontend/utils/graphql/queries.dart' as queries;
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GraphQLService {
@@ -25,6 +26,7 @@ class GraphQLService {
   }
 
   late GraphQLClient _client;
+  final logger = Logger();
 
   Future<QueryResult> performQuery(
     String query, {
@@ -33,6 +35,8 @@ class GraphQLService {
     final options = QueryOptions(document: gql(query), variables: variables);
 
     final result = await _client.query(options);
+
+    logger.i(result);
 
     return result;
   }
