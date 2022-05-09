@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:frontend/app/model/timeslot.dart';
 import 'package:frontend/timeslots/repositories/timeslot_repository.dart';
+import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
 
 part 'booking_event.dart';
@@ -19,6 +20,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<DeleteBooking>(_onDeleteBookingRequested);
   }
   final TimeslotRepository timeslotRepository;
+  final logger = Logger();
 
   Future<void> _onBookingsRequested(
     GetBookings event,
@@ -35,6 +37,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         ),
       );
     } catch (e) {
+      logger.e(e);
       emit(
         state.copyWith(
           status: () => BookingStatus.failure,

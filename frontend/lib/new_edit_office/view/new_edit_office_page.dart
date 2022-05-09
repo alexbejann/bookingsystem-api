@@ -25,10 +25,7 @@ class NewEditOfficePage extends StatelessWidget {
         listenWhen: (previous, current) =>
             previous.status != current.status &&
             current.status == OfficeStatus.editSuccess,
-        listener: (context, state) {
-          print('state ${state.status}');
-          Navigator.of(context).pop();
-        },
+        listener: (context, state) => Navigator.of(context).pop(),
         child: NewEditOfficeView(
           isNewOffice: isNewOffice,
           deleteOffice: deleteOffice,
