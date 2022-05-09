@@ -39,6 +39,8 @@ class OfficeRepository {
   Future<Office> renameOffice({
     required Map<String, dynamic> variables,
   }) async {
+    final user = await User.getUser();
+    variables['organizationId'] = user.organizationID;
     QueryResult? result = await graphQLService.performMutation(
       mutations.renameOffice
       variables: variables,

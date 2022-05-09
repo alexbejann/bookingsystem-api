@@ -1,6 +1,6 @@
 part of 'office_bloc.dart';
 
-enum OfficeStatus { initial, loading, success, failure }
+enum OfficeStatus { initial, loading, success, failure, editSuccess }
 
 class OfficeState extends Equatable {
   const OfficeState({

@@ -11,7 +11,7 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
   OfficeBloc({required this.officeRepository}) : super(const OfficeState()) {
     on<GetOffices>(_onOfficesRequested);
 
-    on<AddOffice>(_onRenameRequested);
+    on<AddOffice>(_onCreationRequested);
 
     on<RenameOffice>(_onRenameRequest);
 
@@ -39,7 +39,7 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
     }
   }
 
-  Future<void> _onRenameRequested(
+  Future<void> _onCreationRequested(
     AddOffice event,
     Emitter<OfficeState> emit,
   ) async {
@@ -53,7 +53,7 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
       );
       emit(
         state.copyWith(
-          status: () => OfficeStatus.success,
+          status: () => OfficeStatus.editSuccess,
           offices: () => [...state.offices, office],
         ),
       );
@@ -71,13 +71,13 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
     try {
       final office = await officeRepository.renameOffice(
         variables: <String, dynamic>{
-          'name': event.name,
+          'newName': event.name,
           'officeId': event.officeId,
         },
       );
       emit(
         state.copyWith(
-          status: () => OfficeStatus.success,
+          status: () => OfficeStatus.editSuccess,
           offices: () => [...state.offices, office],
         ),
       );
@@ -100,8 +100,9 @@ class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
       );
       emit(
         state.copyWith(
-          status: () => OfficeStatus.success,
-          offices: () => [...state.offices]..remove(office),
+          status: () => OfficeStatus.editSuccess,
+          offices: () => [...state.offices]
+            ..removeWhere((element) => element.id == office.id),
         ),
       );
     } catch (e) {

@@ -21,10 +21,19 @@ class NewEditOfficePage extends StatelessWidget {
       create: (context) => OfficeBloc(
         officeRepository: context.read<OfficeRepository>(),
       )..add(const GetOffices()),
-      child: NewEditOfficeView(
-        isNewOffice: isNewOffice,
-        deleteOffice: deleteOffice,
-        isEditOffice: isEditOffice,
+      child: BlocListener<OfficeBloc, OfficeState>(
+        listenWhen: (previous, current) =>
+            previous.status != current.status &&
+            current.status == OfficeStatus.editSuccess,
+        listener: (context, state) {
+          print('state ${state.status}');
+          Navigator.of(context).pop();
+        },
+        child: NewEditOfficeView(
+          isNewOffice: isNewOffice,
+          deleteOffice: deleteOffice,
+          isEditOffice: isEditOffice,
+        ),
       ),
     );
   }
@@ -126,8 +135,7 @@ class _NewEditOfficeViewState extends State<NewEditOfficeView> {
             ),
             const Divider(),
             Visibility(
-              visible: widget.isNewOffice ||
-                  widget.isEditOffice ||
+              visible: widget.isEditOffice ||
                   widget.deleteOffice,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
