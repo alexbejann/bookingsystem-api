@@ -49,6 +49,8 @@ class GraphQLService {
 
     final result = await _client.mutate(options);
 
+    logger.i(result);
+
     return result;
   }
 
